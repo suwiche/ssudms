@@ -1,0 +1,1307 @@
+{% load static %}
+{% load tags %}
+{% get_process_types as process_types %}
+{% get_process as process %}
+{% get_status as status %}
+{% get_provinces as provinces %}
+{% get_levels as levels %}
+{% get_services as services %}
+{% get_service_delivery_modes as service_modes %}
+{% get_agency_types as agency_types %}
+{% get_extensions as extensions %}
+<div class="generate-form">
+    <div class="modal-body">
+    {% if type.is_worker %}
+        <ul class="nav nav-tabs" id="icon-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="worker-tab" data-bs-toggle="tab" href="#worker" role="tab" aria-selected="false">
+                    <i class="icofont icofont-man-in-glasses"></i>
+                    {{type.name}}
+                </a>
+            </li>
+        </ul>
+    {% else %}
+        <ul class="nav nav-tabs" id="icon-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="basic-details-tab" data-bs-toggle="tab" href="#basic-details" role="tab" aria-selected="true">
+                    <i class="icofont icofont-ui-home"></i>
+                    Basic Details
+                </a>
+            </li>
+            {% if details_attribute %}
+            <li class="nav-item">
+                <a class="nav-link disabled" id="additional-info-tab" data-bs-toggle="tab" href="#additional-details" role="tab" aria-selected="false">
+                    <i class="icofont icofont-files"></i>
+                    Additional Information
+                </a>
+            </li>
+            {% endif %} {% if type.has_worker %}
+            <li class="nav-item">
+                <a class="nav-link disabled" id="worker-tab" data-bs-toggle="tab" href="#worker" role="tab" aria-selected="false">
+                    <i class="icofont icofont-man-in-glasses"></i>
+                    Contact Person
+                </a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link disabled" id="license-info-tab" data-bs-toggle="tab" href="#license" role="tab" aria-selected="true">
+                    <i class="icofont icofont-key"></i>
+                    License
+                </a>
+            </li>
+        </ul>
+    {% endif %}
+        <div class="tab-content p-2" id="icon-tabContent">
+
+            <!-- BASIC DETAILS -->
+            <div class="tab-pane fade {% if not type.is_worker %} active show {% endif %}" id="basic-details" role="tabpanel" aria-labelledby="basic-details-tab">
+                <div class="p-3">
+                    <form class="needs-validation was-validated" id="basicDetailsForm"  novalidate="" method="POST" action="{% url 'frontend-add-new-record' 'save-basic-details' %}">
+                        {% csrf_token %}
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <label class="col-form-label">Agency Name <i style="color: #dc3545;">*</i></label>
+                                <div class="">
+                                    <input type="text" class="form-control basic-details" name="name" placeholder="Enter name" required/>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="col-form-label">Type</label>
+                                <div class="">
+                                    <input type="hidden" name="type_id" value="{{type.id}}" />
+                                    <input type="text" class="form-control basic-details" value="{{type.name}}" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Province <i style="color: #dc3545;">*</i></label>
+                                <div class="">
+                                    <select class="form-control basic-details" name="province" id="province" required>
+                                        <option></option>
+                                        {% for row in provinces %}
+                                        <option value="{{row.id}}">{{row.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="invalid-feedback text-danger">Please select province.</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label">City / Municipality <i style="color: #dc3545;">*</i></label>
+                                <div class="">
+                                    <select class="form-control basic-details" name="citymun" id="citymun" required> </select>
+                                    <div class="invalid-feedback text-danger">Please select province.</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Barangay <i style="color: #dc3545;">*</i></label>
+                                <div class="">
+                                    <select class="form-control basic-details" name="barangay" id="barangay" required> </select>
+                                    <div class="invalid-feedback text-danger">Please select barangay.</div>
+                                </div>
+                            </div>
+                            {% if type.acronym == "swda" %}
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Services</label>
+                                <div class="">
+                                    <select class="form-control id_services basic-details" name="services">
+                                        <option></option>
+                                        {% for row in services %}
+                                        <option value="{{row.id}}">{{row.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Service Delivery Mode</label>
+                                <div class="">
+                                    <select class="form-control id_service_modes basic-details" name="service_mode" required>
+                                        <option></option>
+                                        {% for row in service_modes %}
+                                        <option value="{{row.id}}">{{row.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="invalid-feedback text-danger">Please select service delivery mode.</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Agency Type</label>
+                                <div class="">
+                                    <select class="form-control id_agency_types basic-details" name="agency_type" required>
+                                        <option></option>
+                                        {% for row in agency_types %}
+                                        <option value="{{row.id}}">{{row.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="invalid-feedback text-danger">Please select agency type.</div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                       <div class="d-flex justify-content-end mt-3">
+                         <button class="btn btn-primary p-2" id="basicDetailsSaveBtn" type="submit"><i class="fa fa-save"></i> Save Details</button>
+                         <button class="btn btn-warning p-2" id="basicDetailsUpdateBtn" type="button" hidden><i class="fa fa-edit"></i> Update Details</button>
+                       </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END OF BASIC DETAILS -->
+
+            {% if details_attribute %}
+            <div class="tab-pane fade" id="additional-details" style="margin-bottom: -0.5rem;" role="tabpanel" aria-labelledby="additional-info-tab">
+                <div class="p-3">
+                    <form class="needs-validation was-validated" novalidate="" id="additionalDetailsForm" method="POST" action="{% url 'frontend-add-new-record' 'save-additional-details' %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <input type="hidden" name="type_id" value="{{type.id}}" />
+                            {% for row in details_attribute %}
+                            <div class="col-sm-{{row.width}} mb-2">
+                                <label class="col-form-label">{{row.name}}{% if row.is_required %} <i style="color: #dc3545;">*</i>{% endif %}</label>
+                                <div class="">
+                                    <input type="{{row.input_type}}" class="form-control additional-details" name="details-attribute-{{row.id}}" {% if row.is_required %} required {% endif %} />
+                                    {% if row.is_required %} <div class="invalid-feedback text-danger">Required</div> {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="d-flex justify-content-end mt-3">
+                         <button class="btn btn-primary p-2" id="additionalDetailsSaveBtn" type="submit"><i class="fa fa-save"></i> Save Additionals</button>
+                         <button class="btn btn-warning p-2" id="additionalDetailsUpdateBtn" type="button" hidden><i class="fa fa-edit"></i> Update Additionals</button>
+                       </div>
+                    </form>
+
+                </div>
+            </div>
+            {% endif %}
+            <div class="tab-pane fade license-tab-pane" style="margin-bottom: -0.5rem;" id="license" role="tabpanel" aria-labelledby="license-tab">
+                <div class="d-flex justify-content-end mb-2">
+                    <button class="btn btn-sm btn-success p-2" data-role="btn-add-license" type="button"><i class="fa fa-plus"></i> Add Row</button>
+                </div>
+                <div id="license-details">
+                    <div class="b-primary border-2 p-3 b-r-3 mb-2 license">
+                        <form id="licenseDetailsForm" class="licenseDetailsForm needs-validation was-validated" novalidate="" method="POST" action="{% url 'frontend-add-new-record' 'save-license-details' %}">
+                            {% csrf_token %}
+                            <div class="row">
+                                <input type="hidden" class="form-control license_count" name="license_count">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Process <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <select class="form-control id_process license-details" name="process" required>
+                                            <option></option>
+                                            {% for row in process %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="invalid-feedback text-danger">Please select a process.</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Complete Docs</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details" name="date_complete_docs" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Endorsed</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details" name="date_endorsed" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Assessed</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details" name="date_assessed" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Returned</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details" name="date_returned" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Assessed by</label>
+                                    <div class="">
+                                        <input type="text" class="form-control license-details" name="assessed_by" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Status <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <select class="form-control id_status license-details" name="status" required>
+                                            <option></option>
+                                            {% for row in status %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="invalid-feedback text-danger">Please select a status.</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">No <i style="color: #dc3545;">(R/L/A)</i></label>
+                                    <div class="">
+                                        <input type="text" class="form-control license-details license_key" name="license_key" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Issued</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details date_issued" name="date_issued" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Validity</label>
+                                    <div class="">
+                                        <input type="number" class="form-control license-details validity" name="validity" placeholder="Enter months to expire" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Level</label>
+                                    <div class="">
+                                        <select class="form-control id_levels license-details" name="level">
+                                            <option></option>
+                                            {% for row in levels %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                {% if type.id == 3 %}
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Process Type</label>
+                                    <div class="">
+                                        <select class="form-control id_process_type license-details" name="process_type">
+                                            <option></option>
+                                            {% for row in process_types %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Remarks</label>
+                                    <div class="">
+                                        <input type="text" class="form-control license-details" name="remarks" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end mt-3">
+                             <button class="btn btn-primary licenseDetailsSaveBtn p-2" type="submit" data-role="licenseDetailsSaveBtn"><i class="fa fa-save"></i> Save License</button>
+                             <button class="btn btn-warning licenseDetailsUpdateBtn p-2" type="button" data-role="licenseDetailsUpdateBtn" hidden><i class="fa fa-edit"></i> Update License</button>
+                             &nbsp;
+                             <button class="btn btn-danger licenseDetailsRemoveBtn p-2" type="button" data-role="licenseDetailsRemoveBtn"><i class="fa fa-minus-square"></i> Remove License</button>
+                           </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WORKER DETAILS -->
+
+            {% if type.has_worker or type.is_worker %}
+            <div class="tab-pane fade worker-tab-pane {% if type.is_worker %} active show {% endif %}" id="worker" role="tabpanel" aria-labelledby="worker-tab">
+                <div class="d-flex justify-content-end mb-2">
+                    <button class="btn btn-sm btn-success p-2" data-role="btn-add-worker" type="button"><i class="fa fa-plus"></i> Add Row</button>
+                </div>
+                <div id="worker-details">
+                    <div class="b-primary border-2 p-3 b-r-3 mb-2 worker">
+                        <form id="workerDetailsForm" class="workerDetailsForm needs-validation was-validated" novalidate="" method="POST" action="{% url 'frontend-add-new-record' 'save-worker-details' %}">
+                            {% csrf_token %}
+                            <div class="row mb-2">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">First Name <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <input type="hidden" class="form-control" name="type_id" value="{{type.id}}">
+                                        <input type="hidden" class="form-control worker_count" name="worker_count">
+                                        <input type="text" class="form-control worker-details" name="first_name" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Middle Name</label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="middle_name" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Last Name <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="last_name" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label class="col-form-label">Ext</label>
+                                    <div class="">
+                                        <select class="form-control id_ext_name worker-details" name="ext_name">
+                                            <option></option>
+                                            {% for row in extensions %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label class="col-form-label">Sex</label>
+                                    <div class="">
+                                        <select class="form-control id_sex worker-details" name="sex">
+                                            <option></option>
+                                            <option value="1">Male</option>
+                                            <option value="0">Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Address</label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="address">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Province</label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="province">
+                                    </div>
+                                </div>
+                                {% for row in worker_attribute %}
+                                <div class="col-sm-{{row.width}}">
+                                    <label class="col-form-label">{{row.name}} {% if row.is_required == 1 %} <i style="color: #dc3545;">*</i> {% endif %}</label>
+                                    <div class="">
+                                        <input type="{{row.input_type}}" class="form-control worker-details" name="worker-attribute-{{row.id}}" {% if row.is_required == 1 %} required {% endif %}>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <hr>
+                            {% if type.acronym == 'cdc' or type.is_worker %}
+                            <div class="license-col">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Process <i style="color: #dc3545;">*</i></label>
+                                        <div class="">
+                                            <select class="form-control id_wprocess worker-details" name="worker_process" required>
+                                                <option></option>
+                                                {% for row in process %}
+                                                <option value="{{row.id}}">{{row.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <div class="invalid-feedback text-danger">Please select a process.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Complete Docs</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="wdate_complete_docs" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Endorsed</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="wdate_endorsed" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Assessed</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="wdate_assessed" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Returned</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="wdate_returned" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Assessed by</label>
+                                        <div class="">
+                                            <input type="text" class="form-control worker-details" name="wassessed_by" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Status <i style="color: #dc3545;">*</i></label>
+                                        <div class="">
+                                            <select class="form-control id_wstatus worker-details" name="worker_status" required>
+                                                <option></option>
+                                                {% for row in status %}
+                                                <option value="{{row.id}}">{{row.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <div class="invalid-feedback text-danger">Please select a status.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">No <i style="color: #dc3545;">(R/L/A)</i></label>
+                                        <div class="">
+                                            <input type="text" class="form-control worker-details wlicense_key" name="worker_license_key" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Issued</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details wdate_issued" name="worker_date_issued" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Validity</label>
+                                        <div class="">
+                                            <input type="number" class="form-control worker-details wvalidity" name="worker_validity" placeholder="Enter months to expire" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Level</label>
+                                        <div class="">
+                                            <select class="form-control id_wlevels worker-details" name="worker_level">
+                                                <option></option>
+                                                {% for row in levels %}
+                                                <option value="{{row.id}}">{{row.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Remarks</label>
+                                        <div class="">
+                                            <input type="text" class="form-control worker-details" name="worker_remarks" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="d-flex justify-content-end mt-3">
+                             <button class="btn btn-primary workerDetailsSaveBtn p-2" type="submit" data-role="workerDetailsSaveBtn"><i class="fa fa-save"></i> Save Contact Person</button>
+                             <button class="btn btn-warning workerDetailsUpdateBtn p-2" type="button" data-role="workerDetailsUpdateBtn" hidden><i class="fa fa-edit"></i> Update Contact Person</button>
+                             &nbsp;
+                             <button class="btn btn-danger workerDetailsRemoveBtn p-2" type="button" data-role="workerDetailsRemoveBtn"><i class="fa fa-minus-square"></i> Remove Contact Person</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- END OF WORKER DETAILS -->
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success p-2 disabled" type="button" data-role="saveEntryBtn" id="saveEntryBtn"><i class="fa fa-save"></i> Save Entry</button>
+    </div>
+</div>
+{% block script %}
+<script src="{% static '/assets/js/form-validation-custom.js' %}"></script>
+<script>
+    $(document).on("click", 'button[data-role="btn-remove-worker"]', function () {
+        $(this).parents(".worker-row").remove();
+    });
+
+    function initialize_selects() {
+        $(".id_ext_name").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#workerDetailsForm"),
+        });
+        $(".id_sex").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#workerDetailsForm"),
+        });
+
+        $(".id_wprocess").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#workerDetailsForm"),
+        });
+
+        $(".id_wstatus").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#workerDetailsForm"),
+        });
+
+        $(".id_wlevels").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#workerDetailsForm"),
+        });
+
+        $(".id_process").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#licenseDetailsForm"),
+        });
+        $(".id_status").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#licenseDetailsForm"),
+        });
+
+        $(".id_levels").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#licenseDetailsForm"),
+        });
+
+        $(".id_process_type").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#licenseDetailsForm"),
+        });
+
+        $(".id_services").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#basicDetailsForm"),
+        });
+
+        $(".id_service_modes").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#basicDetailsForm"),
+        });
+
+        $(".id_agency_types").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#basicDetailsForm"),
+        });
+    }
+
+    $(document).ready(function (e) {
+        $('button[data-role="btn-add-worker"]').on("click", function () {
+            $('#worker-details').prepend(worker);
+            initialize_selects();
+        });
+
+        $('button[data-role="btn-add-license"]').on("click", function () {
+            $('#license-details').prepend(license);
+            initialize_selects();
+        });
+
+        var select2options = {
+            placeholder: "Select",
+            triggerChange: true,
+            allowClear: false,
+            width: "resolve",
+            dropdownParent: $("#basicDetailsForm"),
+        };
+
+        $("#province").select2(select2options);
+        $("#citymun").select2(select2options);
+        $("#barangay").select2(select2options);
+        var provinceCascade = Select2Cascade($("#province"), $("#citymun"), "/admin/get/citymun/:parentId:", select2options);
+        var citymunCascade = Select2Cascade($("#citymun"), $("#barangay"), "/admin/get/barangay/:parentId:", select2options);
+        initialize_selects();
+
+    });
+</script>
+<script>
+    $('#basicDetailsForm').on('submit', (e) => {
+        e.preventDefault();
+        if($('#basicDetailsForm')[0].checkValidity() === true){
+            swal({
+                title: "Are you sure",
+                text: "Please Confirm",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((result) => {
+                if(result){
+                    $('#basic-details').addClass('disabled-style');
+                    $('#basicDetailsSaveBtn').html('<i class="fa fa-spin fa-spinner"></i> Saving...');
+                    const formData = $("#basicDetailsForm").serialize();
+                    const url = $("#basicDetailsForm").attr("action");
+                    const type = $("#basicDetailsForm").attr("method");
+                    $.ajax({
+                        type: type,
+                        url: url,
+                        data: formData,
+                        success: (result) => {
+                            swal({
+                                title: "Success",
+                                text: result['statusMsg'],
+                                icon: "success",
+                            }).then(() => {
+                                $('.basic-details').prop('disabled', true);
+                                $('#basicDetailsSaveBtn').prop('hidden', true).html('<i class="fa fa-save"></i> Save Details');
+                                $('#basicDetailsUpdateBtn').prop('hidden', false);
+                                $('#basic-details').removeClass('disabled-style');
+                                $('#basicDetailsForm').prop('action', '/dashboard/records/add/update-basic-details');
+                                $('#additional-info-tab').removeClass('disabled');
+                                $('#worker-tab').removeClass('disabled');
+                                $('#license-info-tab').removeClass('disabled');
+                                $('#saveEntryBtn').removeClass('disabled');
+                            });
+                        },
+                        error: (result) => {
+                            const statusMsg = result["responseJSON"]["statusMsg"];
+                            const errors = result["responseJSON"]["errors"];
+                            swal({
+                                title: "Error",
+                                text: statusMsg,
+                                icon: "error",
+                            }).then(() => {
+                                $('#basicDetailsSaveBtn').html('<i class="fa fa-save"></i> Save Details');
+                                $('#basic-details').removeClass('disabled-style');
+                            });
+                        },
+                    });
+
+                }
+
+            });
+        }
+    });
+
+    $('#basicDetailsUpdateBtn').on('click', () => {
+        $('.basic-details').prop('disabled', false);
+        $('#basicDetailsSaveBtn').prop('hidden', false);
+        $('#basicDetailsUpdateBtn').prop('hidden', true);
+    });
+
+    $('#additionalDetailsForm').on('submit', (e) => {
+        e.preventDefault(e);
+         if($('#additionalDetailsForm')[0].checkValidity() === true){
+         swal({
+            title: "Are you sure",
+            text: "Please Confirm",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((result) => {
+            if(result){
+                $('#additional-details').addClass('disabled-style');
+                $('#additionalDetailsSaveBtn').html('<i class="fa fa-spin fa-spinner"></i> Saving...');
+                const formData = $("#additionalDetailsForm").serialize();
+                const url = $("#additionalDetailsForm").attr("action");
+                const type = $("#additionalDetailsForm").attr("method");
+                $.ajax({
+                    type: type,
+                    url: url,
+                    data: formData,
+                    success: (result) => {
+                        swal({
+                            title: "Success",
+                            text: result['statusMsg'],
+                            icon: "success",
+                        }).then(() => {
+                            $('.additional-details').prop('disabled', true);
+                            $('#additional-details').removeClass('disabled-style');
+                            $('#additionalDetailsSaveBtn').prop('hidden', true).html('<i class="fa fa-save"></i> Save Details');
+                            $('#additionalDetailsUpdateBtn').prop('hidden', false);
+                            $('#additionalDetailsForm').prop('action', '/dashboard/records/add/update-additional-details');
+                        });
+                    },
+                    error: (result) => {
+                        const statusMsg = result["responseJSON"]["statusMsg"];
+                        const errors = result["responseJSON"]["errors"];
+                        swal({
+                            title: "Error",
+                            text: statusMsg,
+                            icon: "error",
+                        }).then(() => {
+                            ('#additionalDetailsSaveBtn').html('<i class="fa fa-save"></i> Save Details');
+                            $('#additional-details').removeClass('disabled-style');
+                        });
+                    },
+                });
+
+            }
+
+        });
+         }
+
+    });
+
+    $('#additionalDetailsUpdateBtn').on('click', () => {
+        $('.additional-details').prop('disabled', false);
+        $('#additionalDetailsSaveBtn').prop('hidden', false);
+        $('#additionalDetailsUpdateBtn').prop('hidden', true);
+    });
+
+    $(document).on("click", 'button[data-role="workerDetailsSaveBtn"]', function () {
+        $(this).closest(".worker").children('.workerDetailsForm').on('submit', (e) => {
+            e.preventDefault();
+            if($(this).closest(".worker").children('.workerDetailsForm')[0].checkValidity() === true){
+                swal({
+                    title: "Are you sure",
+                    text: "Please Confirm",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((result) => {
+                    if(result){
+                        $(this).closest(".worker").addClass('disabled-style');
+                        $(this).html('<i class="fa fa-spin fa-spinner"></i> Saving...');
+                        const formData = $(this).closest(".worker").children('.workerDetailsForm').serialize();
+                        const url = $(this).closest(".worker").children('.workerDetailsForm').attr("action");
+                        const type = $(this).closest(".worker").children('.workerDetailsForm').attr("method");
+                        $.ajax({
+                            type: type,
+                            url: url,
+                            data: formData,
+                            success: (result) => {
+                                const worker_count = result['worker_count'];
+                                swal({
+                                    title: "Success",
+                                    text: result['statusMsg'],
+                                    icon: "success",
+                                }).then(() => {
+                                    $(this).closest(".worker").removeClass('disabled-style');
+                                    $(this).closest(".worker").children('.workerDetailsForm').find('.worker-details').prop('disabled', true);
+                                    $(this).closest(".worker").children('.workerDetailsForm').find('.worker_count').val(worker_count);
+                                    $(this).prop('hidden', true).html('<i class="fa fa-save"></i> Save Details');
+                                    $(this).closest(".worker").children('.workerDetailsForm').find('.workerDetailsUpdateBtn').prop('hidden', false);
+                                    $(this).closest(".worker").children('.workerDetailsForm').find('.workerDetailsRemoveBtn').prop('hidden', false);
+                                    $(this).closest(".worker").children('.workerDetailsForm').prop('action', '/dashboard/records/add/update-worker-details');
+                                    $('#saveEntryBtn').removeClass('disabled');
+                                });
+                            },
+                            error: (result) => {
+                                const statusMsg = result["responseJSON"]["statusMsg"];
+                                const errors = result["responseJSON"]["errors"];
+                                swal({
+                                    title: "Error",
+                                    text: statusMsg,
+                                    icon: "error",
+                                }).then(() => {
+                                    $(this).html('<i class="fa fa-save"></i> Save');
+                                    $(this).closest(".worker").removeClass('disabled-style');
+                                });
+                            },
+                        });
+
+                    }
+
+                });
+            }
+        });
+    });
+
+    $(document).on("click", 'button[data-role="workerDetailsUpdateBtn"]', function () {
+        $(this).closest(".worker").children('.workerDetailsForm').find('.worker-details').prop('disabled', false);
+        $(this).prop('hidden', true);
+        $(this).closest(".worker").children('.workerDetailsForm').find('.workerDetailsRemoveBtn').prop('hidden', true);
+        $(this).closest(".worker").children('.workerDetailsForm').find('.workerDetailsSaveBtn').prop('hidden', false);
+    });
+
+    $(document).on("click", 'button[data-role="workerDetailsRemoveBtn"]', function () {
+        swal({
+            title: "Are you sure",
+            text: "Please Confirm",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            }).then((result) => {
+                if(result){
+                    $(this).closest(".worker").addClass('disabled-style');
+                    $(this).html('<i class="fa fa-spin fa-spinner"></i> Deleting...');
+                    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                    const worker_count = $(this).closest(".worker").children('.workerDetailsForm').find('.worker_count').val();
+                    $.ajax({
+                        type: 'POST',
+                        url: '/dashboard/records/add/delete-worker-details',
+                        data: {'worker_count': worker_count},
+                        headers: { "X-CSRFToken": csrftoken },
+                        success: (result) => {
+                            swal({
+                                title: "Success",
+                                text: result['statusMsg'],
+                                icon: "success",
+                            }).then(() => {
+                                $(this).closest(".worker").removeClass('disabled-style');
+                                $(this).closest(".worker").addClass('zoomOutRight animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                                    $(this).closest(".worker").remove();
+                                });
+                            })
+                        },
+                        error: (result) => {
+                            const statusMsg = result["responseJSON"]["statusMsg"];
+                            const errors = result["responseJSON"]["errors"];
+                            swal({
+                                title: "Error",
+                                text: statusMsg,
+                                icon: "error",
+                            }).then(() => {
+                                $(this).html('<i class="fa fa-minus-square"></i> Remove Contact Person');
+                                $(this).closest(".worker").removeClass('disabled-style');
+                            });
+                        },
+                    })
+                }
+            });
+    });
+
+    $(document).on("click", 'button[data-role="licenseDetailsSaveBtn"]', function () {
+        $(this).closest(".license").children('.licenseDetailsForm').on('submit', (e) => {
+            e.preventDefault();
+            if($(this).closest(".license").children('.licenseDetailsForm')[0].checkValidity() === true){
+                swal({
+                    title: "Are you sure",
+                    text: "Please Confirm",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((result) => {
+                    if(result){
+                        $(this).closest(".license").addClass('disabled-style');
+                        $(this).html('<i class="fa fa-spin fa-spinner"></i> Saving...');
+                        const formData = $(this).closest(".license").children('.licenseDetailsForm').serialize();
+                        const url = $(this).closest(".license").children('.licenseDetailsForm').attr("action");
+                        const type = $(this).closest(".license").children('.licenseDetailsForm').attr("method");
+                        $.ajax({
+                            type: type,
+                            url: url,
+                            data: formData,
+                            success: (result) => {
+                                const license_count = result['license_count'];
+                                swal({
+                                    title: "Success",
+                                    text: result['statusMsg'],
+                                    icon: "success",
+                                }).then(() => {
+                                    $(this).closest(".license").removeClass('disabled-style');
+                                    $(this).closest(".license").children('.licenseDetailsForm').find('.license-details').prop('disabled', true);
+                                    $(this).closest(".license").children('.licenseDetailsForm').find('.license_count').val(license_count);
+                                    $(this).prop('hidden', true).html('<i class="fa fa-save"></i> Save License');
+                                    $(this).closest(".license").children('.licenseDetailsForm').find('.licenseDetailsUpdateBtn').prop('hidden', false);
+                                    $(this).closest(".license").children('.licenseDetailsForm').find('.licenseDetailsRemoveBtn').prop('hidden', false);
+                                    $(this).closest(".license").children('.licenseDetailsForm').prop('action', '/dashboard/records/add/update-license-details');
+                                });
+                            },
+                            error: (result) => {
+                                const statusMsg = result["responseJSON"]["statusMsg"];
+                                const errors = result["responseJSON"]["errors"];
+                                swal({
+                                    title: "Error",
+                                    text: statusMsg,
+                                    icon: "error",
+                                }).then(() => {
+                                    $(this).html('<i class="fa fa-save"></i> Save License');
+                                    $(this).closest(".license").removeClass('disabled-style');
+                                });
+                            },
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    $(document).on("click", 'button[data-role="licenseDetailsUpdateBtn"]', function () {
+        $(this).closest(".license").children('.licenseDetailsForm').find('.license-details').prop('disabled', false);
+        $(this).prop('hidden', true);
+        $(this).closest(".license").children('.licenseDetailsForm').find('.licenseDetailsRemoveBtn').prop('hidden', true);
+        $(this).closest(".license").children('.licenseDetailsForm').find('.licenseDetailsSaveBtn').prop('hidden', false);
+    });
+
+    $(document).on("change", ".id_status", function (){
+        if($(this).val() == 4 || $(this).val() == 5){
+            $(this).closest(".license").children('.licenseDetailsForm').find('.license_key').prop('required', true);
+            $(this).closest(".license").children('.licenseDetailsForm').find('.date_issued').prop('required', true);
+            $(this).closest(".license").children('.licenseDetailsForm').find('.validity').prop('required', true);
+        }else{
+            $(this).closest(".license").children('.licenseDetailsForm').find('.license_key').prop('required', false);
+            $(this).closest(".license").children('.licenseDetailsForm').find('.date_issued').prop('required', false);
+            $(this).closest(".license").children('.licenseDetailsForm').find('.validity').prop('required', false);
+        }
+    })
+
+    $(document).on("change", ".id_wstatus", function (){
+        if($(this).val() == 4 || $(this).val() == 5){
+            $(this).closest(".worker").children('.workerDetailsForm').find('.wlicense_key').prop('required', true);
+            $(this).closest(".worker").children('.workerDetailsForm').find('.wdate_issued').prop('required', true);
+            $(this).closest(".worker").children('.workerDetailsForm').find('.wvalidity').prop('required', true);
+        }else{
+            $(this).closest(".worker").children('.workerDetailsForm').find('.wlicense_key').prop('required', false);
+            $(this).closest(".worker").children('.workerDetailsForm').find('.wdate_issued').prop('required', false);
+            $(this).closest(".worker").children('.workerDetailsForm').find('.wvalidity').prop('required', false);
+        }
+    })
+
+    $(document).on("click", 'button[data-role="licenseDetailsRemoveBtn"]', function () {
+        swal({
+            title: "Are you sure",
+            text: "Please Confirm",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            }).then((result) => {
+                if(result){
+                    $(this).closest(".license").addClass('disabled-style');
+                    $(this).html('<i class="fa fa-spin fa-spinner"></i> Deleting...');
+                    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                    const license_count = $(this).closest(".license").children('.licenseDetailsForm').find('.license_count').val();
+                    $.ajax({
+                        type: 'POST',
+                        url: '/dashboard/records/add/delete-license-details',
+                        data: {'license_count': license_count},
+                        headers: { "X-CSRFToken": csrftoken },
+                        success: (result) => {
+                            swal({
+                                title: "Success",
+                                text: result['statusMsg'],
+                                icon: "success",
+                            }).then(() => {
+                                $(this).closest(".license").removeClass('disabled-style');
+                                $(this).closest(".license").addClass('zoomOutRight animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
+                                    $(this).closest(".license").remove();
+                                });
+                            })
+                        },
+                        error: (result) => {
+                            const statusMsg = result["responseJSON"]["statusMsg"];
+                            const errors = result["responseJSON"]["errors"];
+                            swal({
+                                title: "Error",
+                                text: statusMsg,
+                                icon: "error",
+                            }).then(() => {
+                                $(this).html('<i class="fa fa-minus-square"></i> Remove License');
+                                $(this).closest(".license").removeClass('disabled-style');
+                            });
+                        },
+                    })
+                }
+            });
+    });
+
+    $(document).on("click", 'button[data-role="saveEntryBtn"]', function () {
+        swal({
+            title: "Are you sure",
+            text: "You want to create and save this new entry?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((result) => {
+            if(result){
+                $('.generate-form').addClass('disabled-style');
+                $(this).html('<i class="fa fa-spin fa-spinner"></i> Saving...');
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                $.ajax({
+                    type: 'POST',
+                    url: '/dashboard/newrecords/add/save-entry',
+                    headers: { "X-CSRFToken": csrftoken },
+                    success: (result) => {
+                        swal({
+                            title: "Success",
+                            text: result['statusMsg'],
+                            icon: "success",
+                        }).then(() => {
+                            $('.generate-form').removeClass('disabled-style');
+                            location.reload(true);
+                        })
+                    },
+                    error: (result) => {
+                        const statusMsg = result["responseJSON"]["statusMsg"];
+                        const errors = result["responseJSON"]["errors"];
+                        swal({
+                            title: "Error",
+                            text: statusMsg,
+                            icon: "error",
+                        }).then(() => {
+                            $(this).html('<i class="fa fa-save"></i> Save Entry');
+                            $('.generate-form').removeClass('disabled-style');
+                        });
+                    }
+                });
+            }
+        })
+    });
+</script>
+<script for="license">
+    var license = `<div class="b-primary border-2 p-3 b-r-3 mb-2 license">
+                        <form id="licenseDetailsForm" class="licenseDetailsForm needs-validation was-validated" novalidate="" method="POST" action="{% url 'frontend-add-new-record' 'save-license-details' %}">
+                            {% csrf_token %}
+                            <div class="row">
+                                <input type="hidden" class="form-control license_count" name="license_count">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Process <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <select class="form-control id_process license-details" name="process" required>
+                                            <option></option>
+                                            {% for row in process %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="invalid-feedback text-danger">Please select a process.</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Complete Docs</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details" name="date_complete_docs" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Endorsed</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details" name="date_endorsed" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Assessed</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details" name="date_assessed" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Returned</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details" name="date_returned" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Assessed by</label>
+                                    <div class="">
+                                        <input type="text" class="form-control license-details" name="assessed_by" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Status <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <select class="form-control id_status license-details" name="status" required>
+                                            <option></option>
+                                            {% for row in status %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="invalid-feedback text-danger">Please select a status.</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">No <i style="color: #dc3545;">(R/L/A)</i></label>
+                                    <div class="">
+                                        <input type="text" class="form-control license-details license_key" name="license_key" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Issued</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details date_issued" name="date_issued" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Validity</label>
+                                    <div class="">
+                                        <input type="number" class="form-control license-details validity" name="validity" placeholder="Enter months to expire" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Level</label>
+                                    <div class="">
+                                        <select class="form-control id_levels license-details" name="level">
+                                            <option></option>
+                                            {% for row in levels %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {% if type.id == 3 %}
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Process Type</label>
+                                    <div class="">
+                                        <select class="form-control id_process_type license-details" name="process_type">
+                                            <option></option>
+                                            {% for row in process_types %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Remarks</label>
+                                    <div class="">
+                                        <input type="text" class="form-control license-details" name="remarks" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end mt-3">
+                             <button class="btn btn-primary licenseDetailsSaveBtn p-2" type="submit" data-role="licenseDetailsSaveBtn"><i class="fa fa-save"></i> Save License</button>
+                             <button class="btn btn-warning licenseDetailsUpdateBtn p-2" type="button" data-role="licenseDetailsUpdateBtn" hidden><i class="fa fa-edit"></i> Update License</button>
+                             &nbsp;
+                             <button class="btn btn-danger licenseDetailsRemoveBtn p-2" type="button" data-role="licenseDetailsRemoveBtn"><i class="fa fa-minus-square"></i> Remove License</button>
+                           </div>
+                        </form>
+                    </div>`;
+</script>
+<script for="worker">
+    var worker = `<div class="b-primary border-2 p-3 b-r-3 mb-2 worker">
+                        <form id="workerDetailsForm" class="workerDetailsForm needs-validation was-validated" novalidate="" method="POST" action="{% url 'frontend-add-new-record' 'save-worker-details' %}">
+                            {% csrf_token %}
+                            <div class="row mb-2">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">First Name <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <input type="hidden" class="form-control" name="type_id" value="{{type.id}}">
+                                        <input type="hidden" class="form-control worker_count" name="worker_count">
+                                        <input type="text" class="form-control worker-details" name="first_name" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Middle Name</label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="middle_name" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Last Name <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="last_name" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label class="col-form-label">Ext</label>
+                                    <div class="">
+                                        <select class="form-control id_ext_name worker-details" name="ext_name">
+                                            <option></option>
+                                            {% for row in extensions %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label class="col-form-label">Sex</label>
+                                    <div class="">
+                                        <select class="form-control id_sex worker-details" name="sex">
+                                            <option></option>
+                                            <option value="1">Male</option>
+                                            <option value="0">Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Address</label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="address">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Province</label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="province">
+                                    </div>
+                                </div>
+                                {% for row in worker_attribute %}
+                                <div class="col-sm-{{row.width}}">
+                                    <label class="col-form-label">{{row.name}} {% if row.is_required == 1 %} <i style="color: #dc3545;">*</i> {% endif %}</label>
+                                    <div class="">
+                                        <input type="{{row.input_type}}" class="form-control worker-details" name="worker-attribute-{{row.id}}" {% if row.is_required == 1 %} required {% endif %}>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <hr>
+                            {% if type.acronym == 'cdc' or type.is_worker %}
+                            <div class="license-col">
+                                <div class="row mb-2">
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Process <i style="color: #dc3545;">*</i></label>
+                                        <div class="">
+                                            <select class="form-control id_wprocess worker-details" name="worker_process" required>
+                                                <option></option>
+                                                {% for row in process %}
+                                                <option value="{{row.id}}">{{row.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <div class="invalid-feedback text-danger">Please select a process.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Complete Docs</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="wdate_complete_docs" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Endorsed</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="wdate_endorsed" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Assessed</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="wdate_assessed" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Returned</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="wdate_returned" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Assessed by</label>
+                                        <div class="">
+                                            <input type="text" class="form-control worker-details" name="wassessed_by" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Status <i style="color: #dc3545;">*</i></label>
+                                        <div class="">
+                                            <select class="form-control id_wstatus worker-details" name="worker_status" required>
+                                                <option></option>
+                                                {% for row in status %}
+                                                <option value="{{row.id}}">{{row.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <div class="invalid-feedback text-danger">Please select a status.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">No <i style="color: #dc3545;">(R/L/A)</i></label>
+                                        <div class="">
+                                            <input type="text" class="form-control worker-details wlicense_key" name="worker_license_key" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Issued</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details wdate_issued" name="worker_date_issued" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Validity</label>
+                                        <div class="">
+                                            <input type="number" class="form-control worker-details wvalidity" name="worker_validity" placeholder="Enter months to expire" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Level</label>
+                                        <div class="">
+                                            <select class="form-control id_wlevels worker-details" name="worker_level">
+                                                <option></option>
+                                                {% for row in levels %}
+                                                <option value="{{row.id}}">{{row.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Remarks</label>
+                                        <div class="">
+                                            <input type="text" class="form-control worker-details" name="worker_remarks" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="d-flex justify-content-end mt-3">
+                             <button class="btn btn-primary workerDetailsSaveBtn p-2" type="submit" data-role="workerDetailsSaveBtn"><i class="fa fa-save"></i> Save Contact Person</button>
+                             <button class="btn btn-warning workerDetailsUpdateBtn p-2" type="button" data-role="workerDetailsUpdateBtn" hidden><i class="fa fa-edit"></i> Update Contact Person</button>
+                             &nbsp;
+                             <button class="btn btn-danger workerDetailsRemoveBtn p-2" type="button" data-role="workerDetailsRemoveBtn"><i class="fa fa-minus-square"></i> Remove Contact Person</button>
+                            </div>
+                        </form>
+                    </div>`
+</script>
+
+{% endblock %}

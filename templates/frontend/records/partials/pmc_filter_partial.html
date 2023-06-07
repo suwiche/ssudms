@@ -1,0 +1,107 @@
+{% load tags %}
+<div class="card p-4">
+<div class="d-flex justify-content-end mb-3">
+   <button class="btn btn-success" onClick="addRecordButton('{{acronym}}')">Add Record</button>
+   &nbsp;&nbsp;
+   <a class="btn btn-primary cursor-pointer" onClick="generateReportButton('{{filters}}')">Generate Report</a>
+</div>
+<div class="table-responsive">
+   <!--
+      <table class="table table-bordered" style="width:100%">
+         <thead>
+            <tr class="text-center">
+               <th>Actions</th>
+               <th>Name</th>
+               <th>Address</th>
+               <th>Status</th>
+               <th>Level</th>
+               <th>Accreditation No.</th>
+               <th>Date Issued</th>
+               <th>Date Expiry</th>
+            </tr>
+         </thead>
+         <tbody>
+            {% for row in data %}
+            <tr>
+               <td class="text-center"><a class="cursor-pointer" onClick="viewRecordModal('{{acronym}}', {{row.id}});">View</a></td>
+               <td class="text-center">{{row.name}}</td>
+               <td class="text-center">{{row.get_address}}</td>
+               <td class="text-center">{{ row.get_org_transaction_accreditation.transaction.status.name }}</td>
+               <td class="text-center bg-{{row.get_org_transaction_accreditation.transaction.get_color}}">{% if row.get_org_transaction_accreditation %} {{row.get_org_transaction_accreditation.transaction.get_license.level.name}} {% endif %}</td>
+               <td class="text-center bg-{{row.get_org_transaction_accreditation.transaction.get_color}}">{% if row.get_org_transaction_accreditation %} {{row.get_org_transaction_accreditation.transaction.get_license.number}} {% endif %}</td>
+               <td class="text-center bg-{{row.get_org_transaction_accreditation.transaction.get_color}}">{% if row.get_org_transaction_accreditation %} {{row.get_org_transaction_accreditation.transaction.get_license.date_issued}} {% endif %}</td>
+               <td class="text-center bg-{{row.get_org_transaction_accreditation.transaction.get_color}}">{% if row.get_org_transaction_accreditation %} {{row.get_org_transaction_accreditation.transaction.get_license.date_expired}} {% endif %}</td>
+            </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+   -->
+   <table class="table table-bordered table-sm pmc_datatable" style="width:100%" id="pmc_datatable">
+      <thead>
+         <tr class="text-center text-uppercase">
+            <th>Actions</th>
+            <th>No.</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Civil Status</th>
+            <th>Educational Attainment</th>
+            <th>No. Of Years as PMC</th>
+            <th>Present Position</th>
+            <th>Agency</th>
+            <th>Address</th>
+            <th>Province</th>
+            <th>Date Assessed</th>
+            <th>Date Complete Docs</th>
+            <th>Accreditation Number</th>
+            <th>Date Issued</th>
+            <th>Date Expired</th>
+            <th>Not Issued</th>
+            <th>No. of Days Acted Upon</th>
+            <th>Status</th>
+            <th>Remarks</th>
+         </tr>
+      </thead>
+      <tbody>
+         {% for row in data %}
+         <tr class="text-center">
+            <td class="text-center"><a class="cursor-pointer" onClick="viewRecordModal('{{acronym}}', {{row.id}});">View</a></td>
+            <td>{{row.id}}</td>
+            <td>{{row.get_worker_fullname}}</td>
+            <td>{% get_worker_details_by_name 'Age' row.org_type_id row.id %}</td>
+            <td>{{row.get_sex}}</td>
+            <td>{% get_worker_details_by_name 'Civil Status' row.org_type_id row.id %}</td>
+            <td>{% get_worker_details_by_name 'Educational Attainment' row.org_type_id row.id %}</td>
+            <td>{% get_worker_details_by_name 'No. of years as PMC' row.org_type_id row.id %}</td>
+            <td>{% get_worker_details_by_name 'Present Position' row.org_type_id row.id %}</td>
+            <td>{% get_worker_details_by_name 'Agency' row.org_type_id row.id %}</td>
+            <td>{% if row.address and row.address != "None" %} {{row.address}} {% endif %}</td>
+            <td>{% if row.province and row.province != "None" %} {{row.province}} {% endif %}</td>
+            <td>{% if row.get_worker_transaction_accreditation.transaction.date_assessed and row.get_worker_transaction_accreditation.transaction.date_assessed != "None" %} {{row.get_worker_transaction_accreditation.transaction.date_assessed}} {% endif %}</td>
+            <td>{% if row.get_worker_transaction_accreditation.transaction.date_complete_docs and row.get_worker_transaction_accreditation.transaction.date_complete_docs != "None" %} {{row.get_worker_transaction_accreditation.transaction.date_complete_docs}} {% endif %}</td>
+            <td class="bg-{{row.get_worker_transaction_accreditation.transaction.get_color}}">{% if row.get_worker_transaction_accreditation and row.get_worker_transaction_accreditation.transaction.get_license %} {{row.get_worker_transaction_accreditation.transaction.get_license.number}} {% endif %}</td>
+            <td class="bg-{{row.get_worker_transaction_accreditation.transaction.get_color}}">{% if row.get_worker_transaction_accreditation and row.get_worker_transaction_accreditation.transaction.get_license %} {{row.get_worker_transaction_accreditation.transaction.get_license.date_issued}} {% endif %}</td>
+            <td class="bg-{{row.get_worker_transaction_accreditation.transaction.get_color}}">{% if row.get_worker_transaction_accreditation and row.get_worker_transaction_accreditation.transaction.get_license %} {{row.get_worker_transaction_accreditation.transaction.get_license.date_expired}} {% endif %}</td>
+            <td></td>
+            <td></td>
+            <td class="bg-{{row.get_worker_transaction_accreditation.transaction.get_color}}">{% if row.get_worker_transaction_accreditation and row.get_worker_transaction_accreditation.transaction.get_license %} {{row.get_worker_transaction_accreditation.transaction.status.name}} {% endif %}</td>
+            <td>{% if row.get_worker_transaction_accreditation.transaction.remarks and row.get_worker_transaction_accreditation.transaction.remarks != "None" %} {{row.get_worker_transaction_accreditation.transaction.remarks}} {%endif %}</td>
+         </tr>
+         {% endfor %}
+      </tbody>
+   </table>
+   <div class="d-flex justify-content-between">
+      <label class="mt-3">{% if data %} Showing {{ data.start_index }} - {{ data.end_index }} of {{ data.paginator.count }} entr{{ data.paginator.count|pluralize:"y,ies" }} {% else %} No entry {% endif %}</label>
+      <ul class="pagination pagination-primary mt-2 d-flex justify-content-end">
+         <li class="page-item"><a class="page-link {% if not data.has_previous %} disabled {% else %} cursor-pointer {% endif %}" {% if data.has_previous %} hx-get="{% url 'frontend-records' acronym='pmc' action='filter' %}?{{filters}}&page={{ data.previous_page_number }}" hx-trigger="click" hx-target="#records_view" hx-swap="innerHTML" {% endif %}tabindex="-1">Previous</a></li>
+         {% for row in data.paginator.page_range %}
+         {% if data.number == row %}
+         <li class="page-item active"><a style="cursor:pointer" class="page-link" hx-get="{% url 'frontend-records' acronym='pmc' action='filter' %}?{{filters}}&page={{ row }}" hx-trigger="click" hx-target="#records_view" hx-swap="innerHTML">{{row}}</a></li>
+         {% elif data.number|add:'-3' and row < data.number|add:'3' %}
+         <li class="page-item"><a style="cursor:pointer" class="page-link" hx-get="{% url 'frontend-records' acronym='pmc' action='filter' %}?{{filters}}&page={{ row }}" hx-trigger="click" hx-target="#records_view" hx-swap="innerHTML">{{row}}</a></li>
+         {% endif %}
+         {% endfor %}
+         <li class="page-item"><a class="page-link {% if not data.has_next %} disabled {% else %} cursor-pointer {% endif %}" {% if data.has_next %} hx-get="{% url 'frontend-records' acronym='pmc' action='filter' %}?{{filters}}&page={{ data.next_page_number }}" hx-trigger="click" hx-target="#records_view" hx-swap="innerHTML" {% endif %}>Next</a></li>
+      </ul>
+   </div>
+</div>

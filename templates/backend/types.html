@@ -1,0 +1,93 @@
+{% extends 'frontend/header.html' %}
+{% load tags %}
+
+{% block body %}
+{% include 'frontend/alert-messages.html' %}
+{% if action == 'types' %}
+<div class="col-sm-12">
+	<div class="card">
+		<div class="card-body">
+			<div class="d-flex justify-content-end mb-3"><button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addTypeModal">Add Type</button></div>
+			<div class="table-responsive p-1">
+				<table class="table table-hover table-sm datatable">
+					<thead>
+					<tr class="text-center">
+						<th>No.</th>
+						<th>Name</th>
+						<th>Acronym</th>
+						<th>Created by</th>
+						<th>Date Created</th>
+						<th>Updated by</th>
+						<th>Date Updated</th>
+						<th>Status</th>
+						<th>Actions</th>
+					</tr>
+					</thead>
+					<tbody>
+					{% for row in data %}
+					<tr>
+						<td class="text-center">{{row.id}}</td>
+						<td class="text-center">{{row.name}}</td>
+						<td class="text-center">{{row.acronym}}</td>
+						<td class="text-center">{{row.created_by.first_name}} {{row.created_by.last_name}}</td>
+						<td class="text-center">{{row.date_created}}</td>
+						<td class="text-center">{{row.updated_by.first_name}} {{row.updated_by.last_name}}</td>
+						<td class="text-center">{% get_date row.date_updated %}</td>
+						{% get_status_icon row.status %}
+						<td>
+							<div class="d-flex justify-content-center">
+								<a href="{% url 'backend-types-page' action='update' pk=row.id %}" class="text-decoration-none text-danger"><i class="fa fa-edit f-18"></i></a>
+							</div>
+						</td>
+					</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% elif action == 'update_type' %}
+<div class="col-sm-12">
+	<div class="card">
+		<form id="updateTypeForm" class="updateForm" method="POST" action="{% url 'backend-types-page' action='update' pk=data.id %}">
+			<div class="card-body">
+				{% csrf_token %}
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label">Name <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-9">
+						{{form.name}}
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label">Acronym <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-3">
+						{{form.acronym}}
+					</div>
+
+					<label class="col-sm-3 col-form-label">Status <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-3">
+						{{form.status}}
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label">Is Worker? <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-3">
+						{{form.is_worker}}
+					</div>
+
+					<label class="col-sm-3 col-form-label">Has Worker/s? <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-3">
+						{{form.has_worker}}
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a href="{% url 'backend-types-page' %}" class="btn btn-secondary">Back</a>
+				<button class="btn btn-primary" type="submit">Update</button>
+			</div>
+		</form>
+	</div>
+</div>
+{% endif %}
+{% endblock %}

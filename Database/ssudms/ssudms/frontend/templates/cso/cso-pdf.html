@@ -1,0 +1,125 @@
+{% load static %}
+<head>
+	<link href="{% static 'assets/css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+	<style>
+    @page {
+        size: a4 landscape;
+        @frame header_frame {           /* Static Frame */
+            -pdf-frame-content: header_content;
+            left: 30pt; width: 512pt; top: 20pt; height: 20pt;
+        }
+        @frame content_frame {          /* Content Frame */
+            left: 30pt; width: 790pt; top: 45pt; height: 520pt;
+        }
+        @frame footer_frame {           /* Another static Frame */
+            -pdf-frame-content: footer_content;
+            left: 30pt; width: 512pt; bottom: 5pt; height: 20pt;
+        }
+    }
+    .table-1{
+    	table-layout: fixed;
+		border: 1px solid black;
+		padding:3px;
+		text-align: center;
+		border-collapse: collapse;
+    }
+    tr {
+    	text-align:left;
+
+    }
+
+
+
+</style>
+</head>
+
+<body>
+<!-- Content for Static Frame 'header_frame' -->
+<div id="header_content">
+	<h1>List of Accredited as of {{date}}</h1>
+</div>
+
+<!-- HTML Content -->
+<div class="table-1">
+	<table>
+		<tr>
+			<th rowspan="2">Name</th>
+			<th rowspan="2">Address</th>
+			<th>&nbsp</th>
+			<th colspan="3">Contact No.</th>
+			<th>&nbsp</th>
+			<th>&nbsp</th>
+			<th>&nbsp</th>
+			<th colspan="3" style="border: 1px solid black;">DSWD Certificate of</th>
+			<th>&nbsp</th>
+			<th>&nbsp</th>
+		</tr>
+		<tr>
+			<th>Email</th>
+			<th>Landline</th>
+			<th>Fax</th>
+			<th>Cellphone</th>
+			<th>Name</th>
+			<th>Designation</th>
+			<th>Certificate</th>
+			<th>Control No.</th>
+			<th>Date Issued</th>
+			<th>Date Expiry</th>
+			<th>GA</th>
+			<th>Approved Program/<br>Project</th>
+		</tr>
+		{% for i in data %}
+		<tr>
+			<td style="width:100px;">{{i.org_name}}</td>
+			<td style="width:100px;" >{{i.address}}</td>
+			<td style="width:130px;">{{i.email}}</td>
+			<td style="width:50px;">{{i.landline}}</td>
+			<td style="width:50px;">{{i.fax}}</td>
+			<td style="width:80px;">{{i.cellphone}}</td>
+			<td style="width:100px; text-transform: uppercase;">{{i.full_name}}</td>
+			<td style="width:65px;">{{i.designation}}</td>
+			<td style="width:70px;">{{i.certificate}}</td>
+			<td style="width:80px;">{{i.control_no}}</td>
+			<td>{{i.issued}}</td>
+			<td>{{i.expiry}}</td>
+			<td style="width:40px;">{{i.ga}}</td>
+			<td style="width:80px;">{{i.approved_program}}</td>
+		</tr>
+		{% endfor %}
+
+	</table>
+</div>
+
+<br>
+<br>
+<table >
+	<tr>
+		<td>
+			<p>Prepared by: </p>
+			<br>
+			<h3>ARCHIE D. TURTUR, PDO III</h3>
+			<p style="margin-left:15px;">Standards Section Head</p>
+		</td>
+		<td style="text-align:left">
+			<p>Noted by: </p>
+			<br>
+			<h3 style="margin-left:10px;">ALDIE MAE A. ANDOY, SWO IV</h3>
+			<p style="margin-left:50px;">OIC, Chief of PPD</p>
+		</td>
+		<td style="text-align:left">
+			<p>Approved by: </p>
+			<br>
+			<h3 style="margin-left:20px;">RAMEL F. JAMEN</h3>
+			<p style="margin-left:15px;">OIC - Regional Director</p>
+		</td>
+	</tr>
+</table>
+
+<!-- Content for Static Frame 'footer_frame' -->
+<div id="footer_content">Page <pdf:pagenumber></pdf:pagenumber>
+	of <pdf:pagecount></pdf:pagecount>
+</div>
+<script src="{% static 'assets/libs/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

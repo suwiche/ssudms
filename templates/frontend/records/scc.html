@@ -1,0 +1,58 @@
+{% load tags %}
+{% if acronym == 'scc' %}
+<script>
+   $('#scc_datatable').DataTable();
+   $('table.scc_datatable tbody').on('click', 'tr', function() {
+     const table = $('table.scc_datatable').DataTable();
+     let data = table.row(this).data()
+     $('#viewRecordModal').modal('show');
+     $('#viewRecordModalContent').empty();
+     $('#viewRecordModalContent').load(`/dashboard/view_record/scc/view/${data[0]}`);
+   });
+
+   $("#viewRecordModal").on("hide.bs.modal", function (e) {
+        $("#province").select2("destroy");
+        $("#citymun").select2("destroy");
+        $("#barangay").select2("destroy");
+    });
+</script>
+<div class="table-responsive">
+   <table class="table table-bordered table-sm scc_datatable" style="width:100%" id="scc_datatable">
+      <thead>
+         <tr class="text-center">
+            <th class="text-wrap" style="width:1rem;">No.</th>
+            <th class="text-wrap" style="width:1rem;">Name</th>
+            <th class="text-wrap" style="width:1rem;">Address</th>
+            <th class="text-wrap" style="width:1rem;">Date Assessed</th>
+            <th class="text-wrap" style="width:1rem;">Accreditation Number</th>
+            <th class="text-wrap" style="width:1rem;">Date Issued</th>
+            <th class="text-wrap" style="width:1rem;">Date Expired</th>
+            <th class="text-wrap" style="width:1rem;">Status</th>
+            <th class="text-wrap" style="width:1rem;">Remarks</th>
+            <th class="text-wrap" style="width:1rem;">Established by</th>
+            <th class="text-wrap" style="width:1rem;">Managed by</th>
+            <th class="text-wrap" style="width:1rem;">Notice</th>
+         </tr>
+      </thead>
+      <tbody>
+         {% for row in data %}
+         <tr class="text-center">
+            <td>{{row.id}}</td>
+            <td>{{row.name}}</td>
+            <td>{{row.get_address}}</td>
+            <td class="bg-{{row.get_org_transaction_accreditation.transaction.get_color}}">{% if row.get_org_transaction_accreditation %} {{row.get_org_transaction_accreditation.transaction.date_assessed}} {% endif %}</td>
+            <td class="bg-{{row.get_org_transaction_accreditation.transaction.get_color}}">{% if row.get_org_transaction_accreditation and row.get_org_transaction_accreditation.transaction.get_license %} {{row.get_org_transaction_accreditation.transaction.get_license.number}} {% endif %}</td>
+            <td class="bg-{{row.get_org_transaction_accreditation.transaction.get_color}}">{% if row.get_org_transaction_accreditation and row.get_org_transaction_accreditation.transaction.get_license %} {{row.get_org_transaction_accreditation.transaction.get_license.date_issued}} {% endif %}</td>
+            <td class="bg-{{row.get_org_transaction_accreditation.transaction.get_color}}">{% if row.get_org_transaction_accreditation and row.get_org_transaction_accreditation.transaction.get_license %} {{row.get_org_transaction_accreditation.transaction.get_license.date_expired}} {% endif %}</td>
+            <td>{% if row.get_org_transaction_accreditation %} {{row.get_org_transaction_accreditation.transaction.status.name}} {% endif %}</td>
+            <td>{% if row.get_org_transaction_accreditation %} {{row.get_org_transaction_accreditation.transaction.remarks}} {% endif %}</td>
+            <td>{% get_basic_details_by_name 'Established' row.org_type_id row.id %}</td>
+            <td>{% get_basic_details_by_name 'Managed by' row.org_type_id row.id %}</td>
+            <td>{% get_basic_details_by_name 'Notice' row.org_type_id row.id %}</td>
+         </tr>
+         {% endfor %}
+      </tbody>
+   </table>
+</div>
+{% elif action == 'scc_view' %}
+{% endif %}

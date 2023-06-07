@@ -1,0 +1,647 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+    <title>SSUDMS | Child Development Center</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="SSUDMS Portal" name="description" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{% static 'assets/images/dswdcaragregionlogo.jpg' %}">
+    <!-- Fonts Css -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet">
+	<link href="{% static 'assets/images/dswdcaragregionlogo.jpg' %}" rel="stylesheet">
+    <!-- Bootstrap Css -->
+    <link href="{% static 'assets/libs/select2/css/select2.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+    <!-- Icons Css -->
+    <link href="{% static 'assets/css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/fontawesome/css/all.min.css' %}" rel="stylesheet">
+    <!-- App Css-->
+    <link href="{% static 'assets/css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/css/index.css' %}" rel="stylesheet" type="text/css">
+</head>
+
+<body data-sidebar="dark">
+
+    <!-- Begin page -->
+    <div id="layout-wrapper">
+
+        <header id="page-topbar">
+            <div class="navbar-header">
+                <div class="d-flex">
+                    <!-- LOGO -->
+                    <div class="navbar-brand-box">
+                        <a href="index.html" class="logo logo-dark">
+                            <span class="logo-sm">
+                                <img src="{% static 'home/assets/img/dashboardlogosmall.png' %}" alt="" height="30" width="25" style="margin-top: -5px">
+                            </span>
+                            <span class="logo-lg">
+
+                            </span>
+                        </a>
+
+                        <a href="index.html" class="logo logo-light">
+                            <span class="logo-sm">
+                                <img src="{% static 'home/assets/img/dashboardlogosmall.png' %}" alt="" height="30" width="25" style="margin-top: -5px">
+                            </span>
+                            <span class="logo-lg">
+                                 <img src="{% static 'home/assets/img/dashboardlogo.png' %}" alt="" height="40" width="170" style="margin-top: -5px">
+                            </span>
+                        </a>
+                    </div>
+
+                    <button type="button"
+                        class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
+                        <i class="fa fa-fw fa-bars"></i>
+                    </button>
+
+                    <!-- App Search-->
+                    <form class="app-search d-none d-lg-block">
+                        <div class="position-relative">
+                            <input type="text" class="form-control" placeholder="Search...">
+                            <span class="uil-search"></span>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="d-flex">
+
+                    <div class="dropdown d-inline-block d-lg-none ms-2">
+                        <button type="button" class="btn header-item noti-icon waves-effect"
+                            id="page-header-search-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            <i class="uil-search"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                            aria-labelledby="page-header-search-dropdown">
+
+                            <form class="p-3">
+                                <div class="m-0">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Search ..."
+                                            aria-label="Recipient's username">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="submit"><i
+                                                    class="mdi mdi-magnify"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="dropdown d-none d-lg-inline-block ms-1">
+                        <button type="button" class="btn header-item noti-icon waves-effect"
+                            data-bs-toggle="fullscreen">
+                            <i class="far fa-expand-arrows-alt"></i>
+                        </button>
+                    </div>
+
+                    <div class="dropdown d-inline-block">
+                        <button type="button" class="btn header-item noti-icon waves-effect"
+                            id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            <i class="far fa-bell"></i>
+                            <span class="badge bg-danger rounded-pill">3</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                            aria-labelledby="page-header-notifications-dropdown">
+                            <div class="p-3">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h5 class="m-0 font-size-16"> Notifications </h5>
+                                    </div>
+                                    <div class="col-auto">
+                                        <a href="#!" class="small"> Mark all as read</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div data-simplebar style="max-height: 230px;">
+                                <a href="" class="text-reset notification-item">
+                                    <div class="d-flex align-items-start">
+                                        <div class="flex-shrink-0 me-3">
+                                            <div class="avatar-xs">
+                                                <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                                    <i class="uil-shopping-basket"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">Your order is placed</h6>
+                                            <div class="font-size-12 text-muted">
+                                                <p class="mb-1">If several languages coalesce the grammar</p>
+                                                <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 3 min ago</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="" class="text-reset notification-item">
+                                    <div class="d-flex align-items-start">
+                                        <div class="flex-shrink-0 me-3">
+                                            <img src="{% static 'assets/images/users/avatar-3.jpg' %}"
+                                                class="rounded-circle avatar-xs" alt="user-pic">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">James Lemire</h6>
+                                            <div class="font-size-12 text-muted">
+                                                <p class="mb-1">It will seem like simplified English.</p>
+                                                <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 1 hours ago</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="" class="text-reset notification-item">
+                                    <div class="d-flex align-items-start">
+                                        <div class="flex-shrink-0 me-3">
+                                            <div class="avatar-xs">
+                                                <span class="avatar-title bg-success rounded-circle font-size-16">
+                                                    <i class="uil-truck"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">Your item is shipped</h6>
+                                            <div class="font-size-12 text-muted">
+                                                <p class="mb-1">If several languages coalesce the grammar</p>
+                                                <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 3 min ago</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <a href="" class="text-reset notification-item">
+                                    <div class="d-flex align-items-start">
+                                        <div class="flex-shrink-0 me-3">
+                                            <img src="{% static 'assets/images/users/avatar-4.jpg' %}"
+                                                class="rounded-circle avatar-xs" alt="user-pic">
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">Salena Layfield</h6>
+                                            <div class="font-size-12 text-muted">
+                                                <p class="mb-1">As a skeptical Cambridge friend of mine occidental.</p>
+                                                <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 1 hours ago</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="p-2 border-top">
+                                <div class="d-grid">
+                                    <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
+                                        <i class="uil-arrow-circle-right me-1"></i> View More..
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dropdown d-inline-block">
+                        <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img class="rounded-circle header-profile-user"
+                                src="{% static 'assets/images/users/avatar-4.jpg' %}" alt="Header Avatar">
+                            <span class="d-none d-xl-inline-block ms-1 fw-medium font-size-15">
+                                {{ request.user.first_name }} {{ request.user.last_name }}</span>
+                            <i class="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <!-- item-->
+                            <a class="dropdown-item" href="#"><i
+                                    class="uil uil-user-circle font-size-18 align-middle text-muted me-1"></i> <span
+                                    class="align-middle">View Profile</span></a>
+                            <a class="dropdown-item" href="{% url 'frontend-logout-page' %}"><i
+                                    class="uil uil-sign-out-alt font-size-18 align-middle me-1 text-muted"></i> <span
+                                    class="align-middle">Sign out</span></a>
+                        </div>
+                    </div>
+
+                    <div class="dropdown d-inline-block">
+                        <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
+                            <i class="uil-cog"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+
+        <!-- ========== Left Sidebar Start ========== -->
+        <div class="vertical-menu">
+
+            <!-- LOGO -->
+            <div class="navbar-brand-box">
+                <a href="index.html" class="logo logo-light text-white">
+
+                    <span class="logo-sm">
+                         <img src="{% static 'home/assets/img/dashboardlogosmall.png' %}" alt="" height="30" width="25" style="margin-top: -5px">
+                    </span>
+
+                    <span class="logo-lg">
+                         <img src="{% static 'home/assets/img/dashboardlogo.png' %}" alt="" height="40" width="170" style="margin-top: -5px">
+                    </span>
+                </a>
+            </div>
+
+            <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
+                <i class="fa fa-fw fa-bars"></i>
+            </button>
+
+            <div data-simplebar class="sidebar-menu-scroll">
+
+                <!--- Sidemenu -->
+                <div id="sidebar-menu">
+                    <!-- Left Menu Start -->
+                    <ul class="metismenu list-unstyled" id="side-menu">
+                        <li class="menu-title">Menu</li>
+
+                        <li>
+                            <a href="{% url 'dashboard-dashboard-page' %}" class="" aria-current="page">
+                                <i class="far fa-tachometer-alt-fastest"></i>
+                                <!--<span class="badge rounded-pill bg-primary float-end">01</span>-->
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+
+                        <li class="menu-title">Programs
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                <i class="far fa-folders"></i>
+                                <span>CSO</span>
+                            </a>
+                            <ul class="sub-menu" aria-expanded="false">
+                                <li><a href="{% url 'dashboard-cso-page' %}">HOME</a></li>
+                                <li><a href="{% url 'dashboard-cso-create-page' %}">CREATE</a></li>
+                                <li><a href="ecommerce-orders.html">UPDATE</a></li>
+                                <li><a href="ecommerce-customers.html">DELETE</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                <i class="far fa-folders"></i>
+                                <span>CDC / CDW</span>
+                            </a>
+                            <ul class="sub-menu" aria-expanded="false">
+                                <li><a href="{% url 'dashboard-cdc-page' %}">HOME</a></li>
+                                <li><a href="ecommerce-orders.html">UPDATE</a></li>
+                                <li><a href="ecommerce-customers.html">DELETE</a></li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                <i class="far fa-folders"></i>
+                                <span>SWDA</span>
+                            </a>
+                            <ul class="sub-menu" aria-expanded="false">
+                                <li><a href="{% url 'dashboard-swda-page' %}">HOME</a></li>
+                                <li><a href="ecommerce-product-detail.html">READ</a></li>
+                                <li><a href="ecommerce-orders.html">UPDATE</a></li>
+                                <li><a href="ecommerce-customers.html">DELETE</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Sidebar -->
+            </div>
+        </div>
+        <!-- Left Sidebar End -->
+
+        <!-- ============================================================== -->
+        <!-- Start right Content here -->
+        <!-- ============================================================== -->
+        <div class="main-content">
+
+            <div class="page-content">
+                <div class="container-fluid">
+
+                    <!-- start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box d-flex align-items-center justify-content-between">
+                                <h4 class="mb-0">Child Development Center & Worker</h4>
+
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item active">Child Development Center</li>
+                                    </ol>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end page title -->
+                    <div class="card shadow-md">
+                        <div class="card-body">
+                            <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link {% if action == 'cdc' %} active {% else %} {% endif %}" href="{% url 'dashboard-cdc-page' %}" role="tab">
+                                                <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                                                <span class="d-none d-sm-block">Child Development Center</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link {% if action == 'cdw' %} active {% else %} {% endif %}" href="{% url 'dashboard-cdc-page' %}?action=cdw" role="tab">
+                                                <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                                                <span class="d-none d-sm-block">Child Development Worker</span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link {% if action == 'all' %} active {% else %} {% endif %}" href="{% url 'dashboard-cdc-page' %}?action=all" role="tab">
+                                                <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                                                <span class="d-none d-sm-block">All</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <!-- Tab panes -->
+                                    <div class="tab-content p-3 text-muted">
+                                        <div class="tab-pane {% if action == 'cdc' %} active {% else %} {% endif %}" id="navtabs-all" role="tabpanel">
+                                            <div class="d-flex justify-content-end mb-3">
+                                                <button  id="createCdcBtn" class="btn btn-primary"><i class="fal fa-plus"></i> Add Center</button> &nbsp;
+                                            </div>
+                                            <div class="table-responsive">
+                                                <table id="cdcTable" class="table table-striped table-bordered" style="width:100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th data-data="details.id">No.</th>
+                                                            <th data-data="city">Municipality</th>
+                                                            <th data-data="details.org.name">Name</th>
+                                                            <th data-data="level">Level</th>
+                                                            <th data-data="status">Status</th>
+                                                            <th data-data="license_key">Accreditation No.</th>
+                                                            <th data-data="date_issued">Date Issued</th>
+                                                            <th data-data="date_expired">Expiration Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane {% if action == 'cdw' %} active {% else %} {% endif %}" id="navtabs-cdw" role="tabpanel">
+                                            <div class="d-flex justify-content-end mb-3">
+                                                <button  id="createCdwBtn" class="btn btn-primary"><i class="fal fa-plus"></i> Add Worker</button> &nbsp;
+                                            </div>
+                                            <div class="table-responsive">
+                                                <table id="cdwTable" class="table table-striped table-bordered" style="width:100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th data-data="worker.id">No.</th>
+                                                            <th data-data="org">Center</th>
+                                                            <th data-data="full_name">Name</th>
+                                                            <th data-data="worker.gender">Gender</th>
+                                                            <th data-data="level">Level</th>
+                                                            <th data-data="barangay">Address</th>
+                                                            <th data-data="province">Province</th>
+                                                            <th data-data="status">Status</th>
+                                                            <th data-data="date_of_assessment">Date Complete Docs. Received</th>
+                                                            <th data-data="date_completed_docs">Date of Assessment</th>
+                                                            <th data-data="license_key">Accreditation No.</th>
+                                                            <th data-data="date_issued">Date Issued</th>
+                                                            <th data-data="date_expired">Expiration Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane {% if action == 'all' %} active {% else %} {% endif %}" id="navtabs-messages" role="tabpanel">
+                                            <div class="d-flex justify-content-end mb-3">
+                                                <button  id="generateReportFilterBtn" class="btn btn-success">Generate</button> &nbsp;
+                                            </div>
+                                            <div class="table-responsive">
+                                                <table id="cdccdwTable" class="table table-striped table-bordered" style="width:100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th data-data="worker.id">No.</th>
+                                                            <th data-data="city">Municipality</th>
+                                                            <th data-data="org">Name Cdc</th>
+                                                            <th data-data="cdc_level">Level</th>
+                                                            <th data-data="full_name">Name Cdw</th>
+                                                            <th data-data="worker.gender">Sex</th>
+                                                            <th data-data="cdw_level">Level</th>
+                                                            <th data-data="barangay">Address</th>
+                                                            <th data-data="province">Province</th>
+                                                            <th data-data="cdc_status">CDC Status</th>
+                                                            <th data-data="cdw_status">CDW Status</th>
+                                                            <th data-data="date_completed_docs">Date Complete Docs. Received</th>
+                                                            <th data-data="date_of_assessment">Date of Assessment</th>
+                                                            <th >Date Confirmation Transmitted</th>
+                                                            <th data-data="cdc_accreditation_no">Accreditation No.</th>
+                                                            <th data-data="cdc_date_issued">Date Issued</th>
+                                                            <th data-data="cdc_date_expired">Expiry Date</th>
+                                                            <th data-data="cdw_accreditation_no">Accreditation No.</th>
+                                                            <th data-data="cdw_date_issued">Date Issued</th>
+                                                            <th data-data="cdw_date_expired">Expiry Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                        </div>
+                    </div>
+                    <div id="generate-modal">
+                        {% if action == 'cdc' %}
+                        <div class="modal fade" id="createCDCFormModal" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Child Development Center Form</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="cdcForm" method="POST">
+                                                {% csrf_token %}
+                                                <div class="card">
+                                                    <div class="card-header bg-primary text-white">
+                                                        Center Details
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="form-group mb-3">
+                                                            <label>Center Name <small class="text-danger" title="Required">*</small></label>
+                                                            {{ form.center_name }}
+                                                        </div>
+                                                        <div class="row" id="cdc_address">
+                                                            <div class="form-group mb-3 col-lg-4">
+                                                                <label>Select Province <small class="text-danger" title="Required">*</small></label>
+                                                                {{ form.province }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card">
+                                                    <div class="card-header bg-primary text-white">
+                                                        Center Accreditation
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="form-group mb-3 col-lg-6">
+                                                                <label>Status <small class="text-danger" title="Required">*</small></label>
+                                                                {{ form.status }}
+                                                            </div>
+                                                            <div class="form-group mb-3 col-lg-6">
+                                                                <label>Level <small class="text-danger" title="Required">*</small></label>
+                                                                {{ form.level }}
+                                                            </div>
+                                                            <div class="form-group mb-3 col-lg-6">
+                                                                <label>Accreditation no <small class="text-danger" title="Required">*</small></label>
+                                                                {{ form.accreditation_no }}
+                                                            </div>
+                                                            <div class="form-group mb-3 col-lg-6">
+                                                                <label>Date Issued <small class="text-danger" title="Required">*</small></label>
+                                                                {{ form.date_issued }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="d-flex justify-content-between">
+                                                    <label class="mt-1 csoFormMessage">
+                                                    </label>
+                                                    <button class="btn btn-primary" type="btn">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        {% elif action == 'cdw' %}
+                        <div class="modal fade" id="createCDWFormModal" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Child Development Worker Form</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="cdwForm" method="POST">
+                                                {% csrf_token %}
+                                                <div class="card">
+                                                    <div class="card-header bg-primary text-white">
+                                                        Worker Details
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="form-group mb-3">
+                                                                <label>Select Center <small class="text-danger" title="Required">*</small></label>
+                                                                {{ form.cdc }}
+                                                            </div>
+                                                            <div class="form-group mb-3 col-lg-4">
+                                                                <label>First name <small class="text-danger" title="Required">*</small></label>
+                                                                {{ form.first_name }}
+                                                            </div>
+                                                            <div class="form-group mb-3 col-lg-4">
+                                                                <label>Middle name</label>
+                                                                {{ form.middle_name }}
+                                                            </div>
+                                                            <div class="form-group mb-3 col-lg-4">
+                                                                <label>Last name <small class="text-danger" title="Required">*</small></label>
+                                                                {{ form.last_name }}
+                                                            </div>
+                                                            <div class="form-group mb-3 col-lg-6">
+                                                                <label>Extension</label>
+                                                                {{ form.extension }}
+                                                            </div>
+                                                            <div class="form-group mb-3 col-lg-6">
+                                                                <label>Gender <small class="text-danger" title="Required">*</small></label>
+                                                                {{ form.gender }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="row" id="cdw_address">
+                                                            <div class="form-group mb-3 col-lg-4">
+                                                                <label>Select Province <small class="text-danger" title="Required">*</small></label>
+                                                                {{ form.province }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card">
+                                                    <div class="card-header bg-primary text-white">
+                                                        Worker Accreditation
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="form-group mb-3 col-lg-6">
+                                                                <label>Level <small class="text-danger" title="Required">*</small></label>
+                                                                {{ form.level }}
+                                                            </div>
+                                                            <div class="form-group mb-3 col-lg-6">
+                                                                <label>Status <small class="text-danger" title="Required">*</small></label>
+                                                                {{ form.status }}
+                                                            </div>
+                                                            <div class="form-group mb-3 col-lg-6">
+                                                                <label>Accreditation no <small class="text-danger" title="Required">*</small></label>
+                                                                {{ form.accreditation_no }}
+                                                            </div>
+                                                            <div class="form-group mb-3 col-lg-6">
+                                                                <label>Date Issued <small class="text-danger" title="Required">*</small></label>
+                                                                {{ form.date_issued }}
+                                                            </div>
+                                                            <div class="form-group mb-3 col-lg-6">
+                                                                <label>Date Complete <small class="text-danger" title="Required">*</small></label>
+                                                                {{ form.date_complete }}
+                                                            </div>
+                                                            <div class="form-group mb-3 col-lg-6">
+                                                                <label>Date of Assesment <small class="text-danger" title="Required">*</small></label>
+                                                                {{ form.date_of_assessment }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex justify-content-between">
+                                                    <label class="mt-1 csoFormMessage">
+                                                    </label>
+                                                    <button class="btn btn-primary" type="btn">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        {% elif action == 'all' %}
+
+                        {% endif %}
+                    </div>
+                </div> <!-- container-fluid -->
+            </div>
+            <!-- End Page-content -->
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <script>
+                                document.write(new Date().getFullYear())
+                            </script> © DSWD BOIS.
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <!-- end main content-->
+
+    </div>
+    <!-- END layout-wrapper -->
+
+
+    <!-- JAVASCRIPT -->
+    <script src="{% static 'assets/libs/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/libs/metismenu/metisMenu.min.js' %}"></script>
+    <script src="{% static 'assets/libs/simplebar/simplebar.min.js' %}"></script>
+    <script src="{% static 'assets/libs/node-waves/waves.min.js' %}"></script>
+    <script src="{% static 'assets/libs/waypoints/lib/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'assets/libs/jquery.counterup/jquery.counterup.min.js' %}"></script>
+    <!-- App js -->
+    <script src="{% static 'home/assets/js/sweetalert.js' %}"></script>
+    <script src="{% static 'assets/libs/select2/js/select2.min.js' %}"></script>
+    <script src="{% static 'assets/js/app.js' %}"></script>
+    <script src="{% static 'assets/custom/cdc.js' %}"></script>
+    <script src="{% static 'assets/libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+
+</body>
+
+</html>

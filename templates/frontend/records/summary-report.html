@@ -1,0 +1,206 @@
+{% extends 'frontend/header.html' %}
+{% load tags %}
+{% load static %}
+{% block body %}
+{% include 'frontend/alert-messages.html' %}
+<!--
+   <style>
+      @media screen{
+      page {
+      background: white;
+      display: block;
+      margin: 0 auto;
+      margin-bottom: 0.5cm;
+      page-break-after: always;
+      }
+      page[size="Legal"] {
+      width: 22cm;
+      }
+      page[size="Legal"][layout="landscape"] {
+      width: 36cm;
+      }
+      }
+   </style>
+   -->
+   <div class="row">
+      <div class="col-xl-3 xl-20">
+         <div class="default-according style-1 faq-accordion job-accordion" id="accordionoc">
+            <div class="row">
+               <div class="col-xl-12">
+                  <div class="card">
+                     <div class="card-header">
+                        <h5 class="mb-0">
+                           <button class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#collapseicon" aria-expanded="true" aria-controls="collapseicon">Filter</button>
+                        </h5>
+                     </div>
+                     <div class="collapse show" id="collapseicon" aria-labelledby="collapseicon" data-bs-parent="#accordion">
+                        <div class="card-body filter-cards-view animate-chk">
+                           <form class="needs-validation" novalidate="" id="filterReportForm" action="{% url 'frontend-summary-report' %}" method="POST">
+                              {% csrf_token %}
+                              <input type="hidden" name="action" value="load">
+                              <div class="job-filter mb-2">
+                                 <div class="faq-form position-relative">
+                                    <select class="form-select" name="id_type" id="id_types" required>
+                                       <option></option>
+                                       {% for row in org_types %}
+                                        <option value="{{row.id}}">{{row.name}}</option>
+                                       {% endfor %}
+                                    </select>
+                                    <div class="invalid-feedback text-danger">Please select a type.</div>
+                                 </div>
+                              </div>
+                              <div class="job-filter mb-2">
+                                 <div class="faq-form position-relative">
+                                    <select class="form-select" name="id_process" id="id_process" required>
+                                       <option></option>
+                                       {% get_process as process %}
+                                       {% for row in process %}
+                                        <option value="{{row.id}}">{{row.name}}</option>
+                                       {% endfor %}
+                                    </select>
+                                    <div class="invalid-feedback text-danger">Please select a process.</div>
+                                 </div>
+                              </div>
+                              <div class="job-filter mb-2">
+                                 <div class="faq-form position-relative">
+                                    <select class="form-select" name="id_status" id="id_status" required>
+                                       <option></option>
+                                       {% get_status as status %}
+                                       {% for row in status %}
+                                        <option value="{{row.id}}">{{row.name}}</option>
+                                       {% endfor %}
+                                       <option value="all">All</option>
+                                    </select>
+                                    <div class="invalid-feedback text-danger">Please select a status.</div>
+                                 </div>
+                              </div>
+                               <div class="job-filter mb-2">
+                                 <div class="faq-form">
+                                    <select class="form-select" name="id_quarter" id="id_quarters" required>
+                                       <option></option>
+                                       <option value="1">1st</option>
+                                       <option value="2">2nd</option>
+                                       <option value="3">3rd</option>
+                                       <option value="4">4th</option>
+                                       <option value="all">1st - 4th</option>
+                                    </select>
+                                    <div class="invalid-feedback text-danger">Please select a quarter.</div>
+                                 </div>
+                              </div>
+                              <div class="job-filter mb-2">
+                                 <div class="faq-form">
+                                    <select class="form-select" name="id_province" id="id_provinces" required>
+                                       <option></option>
+                                       {% get_provinces as provinces %}
+                                       {% for row in provinces %}
+                                        <option value="{{row.id}}">{{row.name}}</option>
+                                       {% endfor %}
+                                       <option value="all">All</option>
+                                    </select>
+                                    <div class="invalid-feedback text-danger">Please select a province.</div>
+                                 </div>
+                              </div>
+                              <div class="job-filter mb-2">
+                                 <div class="faq-form position-relative">
+                                    {% get_datetime as datetime %}
+                                    {% get_years as years %}
+                                    <select class="form-select" name="id_year" id="id_years" required>
+                                       <option></option>
+                                       {% for row in years %}
+                                       {% if datetime.year == row %}
+                                       <option value="{{row}}" selected>{{row}}</option>
+                                       {% else %}
+                                       <option value="{{row}}">{{row}}</option>
+                                       {% endif %}
+                                       {% endfor %}
+                                    </select>
+                                    <div class="invalid-feedback text-danger">Please select a year.</div>
+                                 </div>
+                              </div>
+                              <button class="btn btn-primary text-center" type="submit">Apply Filters</button>
+                           </form>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-xl-9 xl-80">
+         <div class="card">
+            <div class="card-body" id="generateReportContent" style="zoom: 80%">
+
+            </div>
+         </div>
+      </div>
+   </div>
+{% endblock %}
+{% block script %}
+<script>
+
+   $('#id_types').select2({
+        placeholder: "Select Org Type",
+        width: 'resolve',
+        dropdownParent: $('#filterReportForm'),
+   });
+
+   $('#id_process').select2({
+        placeholder: "Select Process",
+        width: 'resolve',
+        dropdownParent: $('#filterReportForm'),
+   });
+
+   $('#id_status').select2({
+        placeholder: "Select Status",
+        width: 'resolve',
+        dropdownParent: $('#filterReportForm'),
+   });
+
+   $('#id_quarters').select2({
+        placeholder: "Select Quarter",
+        width: 'resolve',
+        dropdownParent: $('#filterReportForm'),
+   });
+
+    $('#id_years').select2({
+        placeholder: "Select Year",
+        width: 'resolve',
+        dropdownParent: $('#filterReportForm'),
+   });
+
+   $('#id_provinces').select2({
+        placeholder: "Select Province",
+        width: 'resolve',
+        dropdownParent: $('#filterReportForm'),
+   });
+
+   $('#filterReportForm').on('submit', (e) => {
+      e.preventDefault();
+      if($('#filterReportForm')[0].checkValidity() === true){
+         $('#filterReportForm').addClass('was-validated');
+         const formData = $("#filterReportForm").serialize();
+         const url = $("#filterReportForm").attr("action");
+         const type = $("#filterReportForm").attr("method");
+         $.ajax({
+           type: type,
+           url: url,
+           data: formData,
+           beforeSend: function() {
+                $('#generateReportContent').empty();
+                $('#generateReportContent').append('<div class="loader"><div class="loader-box"><div class="loader-8"></div></div><h6 class="sub-title mb-0 text-center">Loading...</h6></div>');
+            },
+           success: (result) => {
+              $('#generateReportContent').append(result);
+           },
+           complete: function() {
+                $('.loader').css('display', 'none');
+           }
+         });
+      }
+
+   });
+
+
+
+</script>
+{% endblock %}

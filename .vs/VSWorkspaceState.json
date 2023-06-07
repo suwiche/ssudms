@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\backend",
+    "\\frontend",
+    "\\templates",
+    "\\templates\\frontend",
+    "\\templates\\frontend\\records",
+    "\\templates\\frontend\\records\\partials"
+  ],
+  "SelectedNode": "\\frontend\\models.py",
+  "PreviewInSolutionExplorer": false
+}

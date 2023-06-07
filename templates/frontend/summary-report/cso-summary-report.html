@@ -1,0 +1,70 @@
+{% load tags %}
+<div class="content mb-5">
+    <div class="text-center">
+        <label><b> List Of Accredited CSO as of {{year}}</b></label>
+    </div>
+    <br>
+    <div class="table-responsive">
+    <table class="table table-bordered" id="summaryTable">
+        <thead class="text-center">
+            <tr>
+                <th rowspan="2" class="text-wrap text-uppercase" style="width:4rem;">Name</th>
+                <th rowspan="2" class="text-wrap text-uppercase" style="width:4rem;">Address</th>
+                <th rowspan="2" class="text-wrap text-uppercase" style="width:2rem;">Email</th>
+                <th colspan="3" class="text-wrap text-uppercase" style="width:2rem;">Contact Numbers</th>
+                <th rowspan="2" class="text-wrap text-uppercase" style="width:4rem;">Name</th>
+                <th rowspan="2" class="text-wrap text-uppercase" style="width:2rem;">Designation</th>
+                <th rowspan="2" class="text-wrap text-uppercase" style="width:2rem;">Certificate</th>
+                <th colspan="3" class="text-wrap text-uppercase" style="width:2rem;">DSWD Certificate of Accreditation</th>
+                <th rowspan="2" class="text-wrap text-uppercase" style="width:2rem;">Government Funding</th>
+                <th rowspan="2" class="text-wrap text-uppercase" style="width:2rem;">Approved Program/Project</th>
+            </tr>
+            <tr>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Landline</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Fax</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Cellphone</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Control No.</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Issued</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Expiry</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr class="text-center">
+
+                <td>{{row.name}}</td>
+                <td>{% get_address row.barangay.id %}</td>
+                <td>{% get_details_attribute row.id 1 as email %} {{email.values}}</td>
+                <td>{% get_details_attribute row.id 2 as landline %} {{landline.values}}</td>
+                <td>{% get_details_attribute row.id 3 as fax %} {{fax.values}}</td>
+                <td>{% get_details_attribute row.id 4 as cellphone %} {{cellphone.values}}</td>
+                {% get_workers row.id as workers %}
+                <td>
+                    {% for w in workers %}
+                        {% get_worker_fullname w.id as fullname %} {% if fullname %} {{fullname}}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for w in workers %}
+                        {% get_workers_attribute w.id 3 as designation %} {{designation.values}},
+                    {% endfor %}
+                </td>
+                <td>Accreditation</td>
+                <td class="bg-{{row.get_org_transaction_accreditation.transaction.get_color}}">{{row.get_org_transaction_accreditation.transaction.get_license.number}}</td>
+                <td class="bg-{{row.get_org_transaction_accreditation.transaction.get_color}}">{{row.get_org_transaction_accreditation.transaction.get_license.date_issued}}</td>
+                <td class="bg-{{row.get_org_transaction_accreditation.transaction.get_color}}">{{row.get_org_transaction_accreditation.transaction.get_license.date_expired}}</td>
+                <td>
+                    {% get_details_attribute row.id 5 as gf %} {% if gf.values is not None %} {{gf.values}} {% endif %}
+                </td>
+                <td>
+                    {% get_details_attribute row.id 6 as ap %} {% if ap.values is not None %} {{ap.values}} {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+<script>
+    $('#summaryTable').DataTable();
+</script>

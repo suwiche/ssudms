@@ -1,0 +1,1493 @@
+{% load tags %}
+{% get_process_types as process_types %}
+{% get_process as process %}
+{% get_status as status %}
+{% get_provinces as provinces %}
+{% get_levels as levels %}
+{% get_services as services %}
+{% get_service_delivery_modes as service_modes %}
+{% get_agency_types as agency_types %}
+{% get_extensions as extensions %}
+<div class="view-form">
+    <div class="modal-body">
+        {% if data.org_type.is_worker %}
+        <ul class="nav nav-tabs" id="icon-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="worker-tab" data-bs-toggle="tab" href="#worker" role="tab" aria-selected="false">
+                    <i class="icofont icofont-man-in-glasses"></i>
+                    {{data.org_type.name}}
+                </a>
+            </li>
+        </ul>
+        {% else %}
+        <ul class="nav nav-tabs" id="icon-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="basic-details-tab" data-bs-toggle="tab" href="#basic-details" role="tab" aria-selected="true">
+                    <i class="icofont icofont-ui-home"></i>
+                    Basic Details
+                </a>
+            </li>
+            {% if details_attribute %}
+            <li class="nav-item">
+                <a class="nav-link" id="additional-info-tab" data-bs-toggle="tab" href="#additional-details" role="tab" aria-selected="false">
+                    <i class="icofont icofont-files"></i>
+                    Additional Information
+                </a>
+            </li>
+            {% endif %}
+            {% if data.org_type.has_worker %}
+            <li class="nav-item">
+                <a class="nav-link" id="worker-tab" data-bs-toggle="tab" href="#worker" role="tab" aria-selected="false">
+                    <i class="icofont icofont-man-in-glasses"></i>
+                    Contact Person <span class="badge rounded-pill badge-primary">{{data.get_worker_count}}</span>
+                </a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" id="license-info-tab" data-bs-toggle="tab" href="#license" role="tab" aria-selected="true">
+                    <i class="icofont icofont-key"></i>
+                    License
+                </a>
+            </li>
+        </ul>
+        {% endif %}
+        <div class="tab-content p-2" id="icon-tabContent">
+
+            <!-- BASIC DETAILS -->
+            <div class="tab-pane fade {% if not data.org_type.is_worker %} active show {% endif %}" id="basic-details" role="tabpanel" aria-labelledby="basic-details-tab">
+                <div class="p-3">
+                    <form class="needs-validation was-validated" id="basicDetailsForm"  novalidate="" method="POST" action="{% url 'frontend-update' 'update-basic-details' %}">
+                        {% csrf_token %}
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <label class="col-form-label">Agency Name<i style="color: #dc3545;">*</i></label>
+                                <div class="">
+                                    <input type="hidden" name="org_id" value="{{data.id}}" />
+                                    <input type="text" class="form-control basic-details" name="name" value="{{data.name|safe}}" required />
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="col-form-label">Type</label>
+                                <div class="">
+                                    <input type="text" class="form-control basic-details" value="{{data.org_type.name}}" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Province <i style="color: #dc3545;">*</i></label>
+                                <div class="">
+                                    <select class="form-control basic-details" name="province" id="province">
+                                        <option></option>
+                                        {% get_provinces as provinces %}
+                                        {% for row in provinces %}
+                                        {% if row.id == data.barangay.city_code.prov_code.id %}
+                                        <option value="{{row.id}}" selected>{{row.name}}</option>
+                                        {% else %}
+                                        <option value="{{row.id}}">{{row.name}}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label">City / Municipality <i style="color: #dc3545;">*</i></label>
+                                <div class="">
+                                    <select class="form-control basic-details" name="citymun" id="citymun" required>
+                                        <option></option>
+                                        {% get_cities data.barangay.city_code.prov_code as cities %}
+                                        {% for row in cities %}
+                                        {% if row.code == data.barangay.city_code.code %}
+                                        <option value="{{row.id}}" selected>{{row.name}}</option>
+                                        {% else %}
+                                        <option value="{{row.id}}">{{row.name}}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Barangay <i style="color: #dc3545;">*</i></label>
+                                <div class="">
+                                    <select class="form-control basic-details" name="barangay" id="barangay" required>
+                                        <option></option>
+                                        {% get_barangays data.barangay.city_code as barangays %}
+                                        {% for row in barangays %}
+                                        {% if row.id == data.barangay.id %}
+                                        <option value="{{row.id}}" selected>{{row.name}}</option>
+                                        {% else %}
+                                        <option value="{{row.id}}">{{row.name}}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            {% if data.org_type.acronym == "swda" %}
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Services</label>
+                                <div class="">
+                                    <select class="form-control id_services basic-details" name="services" required>
+                                        <option></option>
+                                        {% for s in services %}
+                                        {% if s == data.get_org_service.service %}
+                                        <option value="{{s.id}}" selected>{{s.name}}</option>
+                                        {% else %}
+                                        <option value="{{s.id}}">{{s.name}}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Service Delivery Mode</label>
+                                <div class="">
+                                    <select class="form-control id_service_modes basic-details" name="service_mode" required>
+                                        <option></option>
+                                        {% for s in service_modes %}
+                                        {% if s == data.get_org_service.service_delivery_mode %}
+                                        <option value="{{s.id}}" selected>{{s.name}}</option>
+                                        {% else %}
+                                        <option value="{{s.id}}">{{s.name}}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                    <div class="invalid-feedback text-danger">Please select service delivery mode.</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Agency Type</label>
+                                <div class="">
+                                    <select class="form-control id_agency_types basic-details" name="agency_type" required>
+                                        <option></option>
+                                        {% for a in agency_types %}
+                                        {% if a == data.agency_type %}
+                                        <option value="{{a.id}}" selected>{{a.name}}</option>
+                                        {% else %}
+                                        <option value="{{a.id}}">{{a.name}}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                    <div class="invalid-feedback text-danger">Please select agency type.</div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                       <div class="d-flex justify-content-end mt-3">
+                         <button class="btn btn-primary p-2" id="basicDetailsSaveBtn" type="submit" hidden><i class="fa fa-save"></i> Save Details</button>
+                         <button class="btn btn-warning p-2" id="basicDetailsUpdateBtn" type="button"><i class="fa fa-edit"></i> Update Details</button>
+                       </div>
+                    </form>
+                </div>
+            </div>
+            <!-- END OF BASIC DETAILS -->
+
+            {% if details_attribute %}
+            <div class="tab-pane fade" id="additional-details" style="margin-bottom: -0.5rem;" role="tabpanel" aria-labelledby="additional-info-tab">
+                <div class="p-3">
+                    <form class="needs-validation was-validated" id="additionalDetailsForm"  novalidate="" method="POST" action="{% url 'frontend-update' 'update-additional-details' %}">
+                        {% csrf_token %}
+                        <div class="row">
+                            <input type="hidden" name="org_id" value="{{data.id}}" />
+                           {% for row in details_attribute %}
+                           <div class="col-sm-{{row.width}} mb-2">
+                              <label class="col-form-label">{{row.name}}{% if row.is_required %} <i style="color: #dc3545;">*</i>{% endif %}</label>
+                              <div class="">
+                                 {% get_details_attribute data.id row.id as details %}
+                                 <input type="text" class="form-control additional-details" name="details-attribute-{{row.id}}" value="{{details.values}}" {% if row.is_required %} required {% endif %}>
+                              </div>
+                           </div>
+                           {% endfor %}
+                        </div>
+                        <div class="d-flex justify-content-end mt-3">
+                         <button class="btn btn-primary p-2" id="additionalDetailsSaveBtn" type="submit" hidden><i class="fa fa-save"></i> Save Additionals</button>
+                         <button class="btn btn-warning p-2" id="additionalDetailsUpdateBtn" type="button"><i class="fa fa-edit"></i> Update Additionals</button>
+                       </div>
+                    </form>
+
+                </div>
+            </div>
+            {% endif %}
+            <div class="tab-pane fade license-tab-pane" style="margin-bottom: -0.5rem;" id="license" role="tabpanel" aria-labelledby="license-tab">
+                <div class="d-flex justify-content-end mb-2">
+                    <button class="btn btn-sm btn-success p-2" data-role="btn-add-license" type="button"><i class="fa fa-plus"></i> Add Row</button>
+                </div>
+                <div id="license-details">
+                    {% for row in data.get_all_process_org_transaction %}
+                    <div class="b-primary border-2 p-3 b-r-3 mb-2 license">
+                        <form class="needs-validation was-validated licenseDetailsForm" id="licenseDetailsForm"  novalidate="" method="POST" action="{% url 'frontend-update' 'update-license-details' %}">
+                            {% csrf_token %}
+                            <div class="row">
+                                <input type="hidden" class="form-control license_count" name="license_count">
+                                <input type="hidden" class="form-control" name="org_id" value="{{data.id}}">
+                                <input type="hidden" class="form-control" name="transaction_id" value="{{row.transaction.id}}">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Process <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <select class="form-control id_process license-details" name="process" required>
+                                            <option></option>
+                                            {% for p in process %}
+                                            {% if row.transaction.process == p %}
+                                             <option value="{{p.id}}" selected>{{p.name}}</option>
+                                             {% else %}
+                                             <option value="{{p.id}}">{{p.name}}</option>
+                                             {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                        <div class="invalid-feedback text-danger">Please select a process.</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Complete Docs</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details" name="date_complete_docs" value='{{row.transaction.date_complete_docs|date:"Y-m-d"}}'/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Endorsed</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details" name="date_endorsed" value='{{row.transaction.date_endorsed|date:"Y-m-d"}}'/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Assessed</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details" name="date_assessed" value='{{row.transaction.date_assessed|date:"Y-m-d"}}'/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Returned</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details" name="date_returned" value='{{row.transaction.date_returned|date:"Y-m-d"}}' />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Assessed by</label>
+                                    <div class="">
+                                        <input type="text" class="form-control license-details" name="assessed_by" value='{{row.transaction.assessed_by}}' />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Status <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <select class="form-control id_status license-details" name="status" required>
+                                            <option></option>
+                                            {% for s in status %}
+                                            {% if row.transaction.status == s %}
+                                            <option value="{{s.id}}" selected>{{s.name}}</option>
+                                            {% else %}
+                                            <option value="{{s.id}}">{{s.name}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                        <div class="invalid-feedback text-danger">Please select a status.</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">No <i style="color: #dc3545;">(R/L/A)</i></label>
+                                    <div class="">
+                                        <input type="text" class="form-control license-details license_key bg-{{row.transaction.get_color}}" value="{{row.transaction.get_license.number}}" name="license_key" placeholder="License No." {% if row.transaction.status.id == 4 or row.transaction.status.id == 5 %} required {% endif %}/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Issued</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details date_issued bg-{{row.transaction.get_color}}" value='{{row.transaction.get_license.date_issued|date:"Y-m-d"}}' name="date_issued" {% if row.transaction.status.id == 4 or row.transaction.status.id == 5 %} required {% endif %}/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Expired</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details bg-{{row.transaction.get_color}}" readonly value='{{row.transaction.get_license.date_expired|date:"Y-m-d"}}' name="date_expired" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Validity</label>
+                                    <div class="">
+                                        <input type="number" class="form-control license-details validity bg-{{row.transaction.get_color}}" value="{{row.transaction.get_license.validity}}" name="validity" placeholder="Validity" {% if row.transaction.status.id == 4 or row.transaction.status.id == 5 %} required {% endif %}/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Level</label>
+                                    <div class="">
+                                        <select class="form-control id_levels license-details" name="level">
+                                            <option></option>
+                                            {% for l in levels %}
+                                            {% if row.transaction.get_license.level == l %}
+                                            <option value="{{l.id}}" selected>{{l.name}}</option>
+                                            {% else %}
+                                            <option value="{{l.id}}">{{l.name}}</option>
+                                            {% endif %}
+                                             {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                {% if data.org_type.id == 3 %}
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Process Type</label>
+                                    <div class="">
+                                        <select class="form-control id_process_type license-details" name="process_type">
+                                            <option></option>
+                                            {% for pt in process_types %}
+                                            {% if pt == row.transaction.process_type %}
+                                            <option value="{{pt.id}}" selected>{{pt.name}}</option>
+                                            {% else %}
+                                            <option value="{{pt.id}}">{{pt.name}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Remarks</label>
+                                    <div class="">
+                                        <input type="text" class="form-control license-details" name="remarks" value="{{row.transaction.remarks}}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end mt-3">
+                             <button class="btn btn-primary licenseDetailsSaveBtn p-2" type="submit" data-role="licenseDetailsSaveBtn" hidden><i class="fa fa-save"></i> Save License</button>
+                             <button class="btn btn-warning licenseDetailsUpdateBtn p-2" type="button" data-role="licenseDetailsUpdateBtn"><i class="fa fa-edit"></i> Update License</button>
+                             &nbsp;
+                             <button class="btn btn-danger licenseDetailsRemoveBtn p-2" type="button" data-role="licenseDetailsRemoveBtn" hidden><i class="fa fa-minus-square"></i> Remove License</button>
+                           </div>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- WORKER DETAILS -->
+
+            {% if data.org_type.has_worker %}
+            <div class="tab-pane fade worker-tab-pane" id="worker" role="tabpanel" aria-labelledby="worker-tab">
+                <div class="d-flex justify-content-end mb-2">
+                    <button class="btn btn-sm btn-success p-2" data-role="btn-add-worker" type="button"><i class="fa fa-plus"></i> Add Row</button>
+                </div>
+                <div id="worker-details">
+                    {% for worker in data.get_workers %}
+                    <div class="b-primary border-2 p-3 b-r-3 mb-2 worker">
+                        <form class="needs-validation was-validated workerDetailsForm" id="workerDetailsForm"  novalidate="" method="POST" action="{% url 'frontend-update' 'update-worker-details' %}">
+                            {% csrf_token %}
+                            <input type="hidden" class="form-control" name="org_id" value="{{data.id}}">
+                            <input type="hidden" class="form-control" name="worker_id" value="{{worker.id}}">
+                            <input type="hidden" class="form-control" name="type_id" value="{{data.org_type.id}}">
+                            <div class="row mb-2">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">First Name <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <input type="hidden" class="form-control worker_count" name="worker_count">
+                                        <input type="text" class="form-control worker-details" name="first_name" value="{{worker.first_name}}" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Middle Name</label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="middle_name" value="{{worker.middle_name}}" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Last Name <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="last_name" value="{{worker.last_name}}" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label class="col-form-label">Ext</label>
+                                    <div class="">
+                                        <select class="form-control id_ext_name worker-details" name="ext_name">
+                                            <option></option>
+                                            {% for row in extensions %}
+                                            {% if worker.extension.id == row.id %}
+                                            <option value="{{row.id}}" selected>{{row.name}}</option>
+                                            {% else %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label class="col-form-label">Sex</label>
+                                    <div class="">
+                                        <select class="form-control id_sex worker-details" name="sex">
+                                            <option></option>
+                                            {% if worker.sex == 1 %}
+                                            <option value="0">Female</option>
+                                            <option value="1" selected>Male</option>
+                                            {% elif worker.sex == 0 %}
+                                            <option value="0" selected>Female</option>
+                                            <option value="1">Male</option>
+                                            {% else %}
+                                            <option value="0">Female</option>
+                                            <option value="1">Male</option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Address</label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="address" value="{{worker.address}}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Province</label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="province" value="{{worker.province}}">
+                                    </div>
+                                </div>
+                                {% for row in worker_attribute %}
+                                {% get_workers_attribute worker.id row.id as worker_attrs %}
+                                <div class="col-sm-{{row.width}}">
+                                    <label class="col-form-label">{{row.name}} {% if row.is_required == 1 %} <i style="color: #dc3545;">*</i> {% endif %}</label>
+                                    <div class="">
+                                        <input type="{{row.input_type}}" class="form-control worker-details" value="{% if worker_attrs %} {{worker_attrs.values}} {% endif %}" name="worker-attribute-{{row.id}}" {% if row.is_required == 1 %} required {% endif %}>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <hr>
+                            {% if data.org_type.acronym == 'cdc' %}
+                            {% if worker.get_worker_transaction_accreditation %}
+                            <div class="license-col">
+                                <div class="row mb-2">
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Process <i style="color: #dc3545;">*</i></label>
+                                        <div class="">
+                                            <input type="hidden" class="form-control" name="transaction_id" value="{{worker.get_worker_transaction_accreditation.transaction.id}}">
+                                            <select class="form-control id_wprocess worker-details" name="worker_process" required>
+                                                <option></option>
+                                                {% for p in process %}
+                                                {% if worker.get_worker_transaction_accreditation.transaction.process == p %}
+                                                <option value="{{p.id}}" selected>{{p.name}}</option>
+                                                {% else %}
+                                                <option value="{{p.id}}">{{p.name}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                            <div class="invalid-feedback text-danger">Please select a process.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Complete Docs</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="wdate_complete_docs" value='{{worker.get_worker_transaction_accreditation.transaction.date_complete_docs|date:"Y-m-d"}}'/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Endorsed</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="wdate_endorsed" value='{{worker.get_worker_transaction_accreditation.transaction.date_endorsed|date:"Y-m-d"}}'/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Assessed</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="wdate_assessed" value='{{worker.get_worker_transaction_accreditation.transaction.date_assessed|date:"Y-m-d"}}'/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Returned</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="wdate_returned" value='{{worker.get_worker_transaction_accreditation.transaction.date_returned|date:"Y-m-d"}}' />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Assessed by</label>
+                                        <div class="">
+                                            <input type="text" class="form-control worker-details" name="wassessed_by" value='{{worker.get_worker_transaction_accreditation.transaction.assessed_by}}' />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Status <i style="color: #dc3545;">*</i></label>
+                                        <div class="">
+                                            <select class="form-control id_wstatus worker-details wstatus" name="worker_status" required>
+                                                <option></option>
+                                                {% for s in status %}
+                                                {% if worker.get_worker_transaction_accreditation.transaction.status == s %}
+                                                <option value="{{s.id}}" selected>{{s.name}}</option>
+                                                {% else %}
+                                                <option value="{{s.id}}">{{s.name}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                            <div class="invalid-feedback text-danger">Please select a status.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">No <i style="color: #dc3545;">(R/L/A)</i></label>
+                                        <div class="">
+                                            <input type="text" class="form-control worker-details wlicense_key bg-{{worker.get_worker_transaction_accreditation.transaction.get_color}}" name="worker_license_key" value="{{worker.get_worker_transaction_accreditation.transaction.get_license.number}}" placeholder="License No." {% if worker.get_worker_transaction_accreditation.transaction.status.id == 4 or worker.get_worker_transaction_accreditation.transaction.status.id == 5 %} required {% endif %} />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Issued</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details wdate_issued bg-{{worker.get_worker_transaction_accreditation.transaction.get_color}}" name="worker_date_issued" value='{{worker.get_worker_transaction_accreditation.transaction.get_license.date_issued|date:"Y-m-d"}}' {% if worker.get_worker_transaction_accreditation.transaction.status.id == 4 or worker.get_worker_transaction_accreditation.transaction.status.id == 5 %} required {% endif %}/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                      <label class="col-form-label">Date Expired</label>
+                                      <div class="">
+                                         <input type="date" class="form-control worker-details bg-{{worker.get_worker_transaction_accreditation.transaction.get_color}}" readonly value='{{worker.get_worker_transaction_accreditation.transaction.get_license.date_expired|date:"Y-m-d"}}'>
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Validity</label>
+                                        <div class="">
+                                            <input type="number" class="form-control worker-details wvalidity bg-{{worker.get_worker_transaction_accreditation.transaction.get_color}}" name="worker_validity" value='{{worker.get_worker_transaction_accreditation.transaction.get_license.validity}}' placeholder="Validity" {% if worker.get_worker_transaction_accreditation.transaction.status.id == 4 or worker.get_worker_transaction_accreditation.transaction.status.id == 5 %} required {% endif %} />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Level</label>
+                                        <div class="">
+                                            <select class="form-control id_wlevels worker-details" name="worker_level">
+                                                <option></option>
+                                                {% for l in levels %}
+                                                {% if worker.get_worker_transaction_accreditation.transaction.get_license.level == l %}
+                                                <option value="{{l.id}}" selected>{{l.name}}</option>
+                                                {% else %}
+                                                <option value="{{l.id}}">{{l.name}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Remarks</label>
+                                        <div class="">
+                                            <input type="text" class="form-control worker-details" name="remarks" value="{{worker.get_worker_transaction_accreditation.transaction.remarks}}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endif %}
+                            <div class="d-flex justify-content-end mt-3">
+                             <button class="btn btn-primary workerDetailsSaveBtn p-2" type="submit" data-role="workerDetailsSaveBtn" hidden><i class="fa fa-save"></i> Save Contact Person</button>
+                             <button class="btn btn-warning workerDetailsUpdateBtn p-2" type="button" data-role="workerDetailsUpdateBtn"><i class="fa fa-edit"></i> Update Contact Person</button>
+                             &nbsp;<!--
+                             <button class="btn btn-danger workerDetailsRemoveBtn p-2" type="button" data-role="workerDetailsRemoveBtn" hidden><i class="fa fa-minus-square"></i> Remove</button>
+                            -->
+                            </div>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% elif data.org_type.is_worker %}
+            <div class="tab-pane fade worker-tab-pane {% if data.org_type.is_worker %} active show {% endif %}" id="worker" role="tabpanel" aria-labelledby="worker-tab">
+                <div class="d-flex justify-content-end mb-2">
+                </div>
+                <div id="worker-details">
+                    <div class="b-primary border-2 p-3 b-r-3 mb-2 worker">
+                        <form class="needs-validation was-validated workerDetailsForm" id="workerDetailsForm"  novalidate="" method="POST" action="{% url 'frontend-update' 'update-worker-details' %}">
+                            {% csrf_token %}
+                            <input type="hidden" class="form-control" name="org_id" value="{{data.org.id}}">
+                            <input type="hidden" class="form-control" name="worker_id" value="{{data.id}}">
+                            <input type="hidden" class="form-control" name="type_id" value="{{data.org_type.id}}">
+                            <div class="row mb-1">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">First Name <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <input type="hidden" class="form-control worker_count" name="worker_count">
+                                        <input type="text" class="form-control worker-details" name="first_name" value="{{data.first_name}}" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Middle Name</label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="middle_name" value="{{data.middle_name}}" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Last Name <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="last_name" value="{{data.last_name}}" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label class="col-form-label">Ext</label>
+                                    <div class="">
+                                        <select class="form-control id_ext_name worker-details" name="ext_name">
+                                            <option></option>
+                                            {% for row in extensions %}
+                                            {% if data.extension.id == row.id %}
+                                            <option value="{{row.id}}" selected>{{row.name}}</option>
+                                            {% else %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label class="col-form-label">Sex</label>
+                                    <div class="">
+                                        <select class="form-control id_sex worker-details" name="sex">
+                                            <option></option>
+                                            {% if data.sex == 1 %}
+                                            <option value="0">Female</option>
+                                            <option value="1" selected>Male</option>
+                                            {% elif data.sex == 0 %}
+                                            <option value="0" selected>Female</option>
+                                            <option value="1">Male</option>
+                                            {% else %}
+                                            <option value="0">Female</option>
+                                            <option value="1">Male</option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Address</label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="address" value="{{data.address}}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Province</label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="province" value="{{data.province}}">
+                                    </div>
+                                </div>
+                                {% for row in worker_attribute %}
+                                {% get_workers_attribute data.id row.id as worker_attrs %}
+                                <div class="col-sm-{{row.width}}">
+                                    <label class="col-form-label">{{row.name}} {% if row.is_required == 1 %} <i style="color: #dc3545;">*</i> {% endif %}</label>
+                                    <div class="">
+                                        <input type="{{row.input_type}}" class="form-control worker-details" value='{% if worker_attrs %}{% if row.input_type != "date" %}{{worker_attrs.values}}{% else %}{{worker_attrs.values}}{% endif %}{% endif %}' name="worker-attribute-{{row.id}}" {% if row.is_required == 1 %} required {% endif %}>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <hr>
+                            {% if data.get_worker_transaction_accreditation %}
+                            <div class="license-col">
+                                <div class="row mb-2">
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Process <i style="color: #dc3545;">*</i></label>
+                                        <div class="">
+                                            <input type="hidden" class="form-control" name="transaction_id" value="{{data.get_worker_transaction_accreditation.transaction.id}}">
+                                            <select class="form-control id_wprocess worker-details" name="worker_process" required>
+                                                <option></option>
+                                                {% for p in process %}
+                                                {% if data.get_worker_transaction_accreditation.transaction.process == p %}
+                                                <option value="{{p.id}}" selected>{{p.name}}</option>
+                                                {% else %}
+                                                <option value="{{p.id}}">{{p.name}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                            <div class="invalid-feedback text-danger">Please select a process.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Complete Docs</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="wdate_complete_docs" value='{{data.get_worker_transaction_accreditation.transaction.date_complete_docs|date:"Y-m-d"}}'/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Endorsed</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="wdate_endorsed" value='{{data.get_worker_transaction_accreditation.transaction.date_endorsed|date:"Y-m-d"}}'/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Assessed</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="wdate_assessed" value='{{data.get_worker_transaction_accreditation.transaction.date_assessed|date:"Y-m-d"}}'/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Returned</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="wdate_returned" value='{{data.get_worker_transaction_accreditation.transaction.date_returned|date:"Y-m-d"}}' />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Assessed by</label>
+                                        <div class="">
+                                            <input type="text" class="form-control worker-details" name="wassessed_by" value='{{data.get_worker_transaction_accreditation.transaction.assessed_by}}' />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Status <i style="color: #dc3545;">*</i></label>
+                                        <div class="">
+                                            <select class="form-control id_wstatus worker-details wstatus" name="worker_status" required>
+                                                <option></option>
+                                                {% for s in status %}
+                                                {% if data.get_worker_transaction_accreditation.transaction.status == s %}
+                                                <option value="{{s.id}}" selected>{{s.name}}</option>
+                                                {% else %}
+                                                <option value="{{s.id}}">{{s.name}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                            <div class="invalid-feedback text-danger">Please select a status.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">No <i style="color: #dc3545;">(R/L/A)</i></label>
+                                        <div class="">
+                                            <input type="text" class="form-control worker-details wlicense_key bg-{{data.get_worker_transaction_accreditation.transaction.get_color}}" name="worker_license_key" value="{{data.get_worker_transaction_accreditation.transaction.get_license.number}}" placeholder="License No." {% if data.get_worker_transaction_accreditation.transaction.status.id == 4 or data.get_worker_transaction_accreditation.transaction.status.id == 5 %} required {% endif %} />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Issued</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details wdate_issued bg-{{data.get_worker_transaction_accreditation.transaction.get_color}}" name="worker_date_issued" value='{{data.get_worker_transaction_accreditation.transaction.get_license.date_issued|date:"Y-m-d"}}' {% if data.get_worker_transaction_accreditation.transaction.status.id == 4 or data.get_worker_transaction_accreditation.transaction.status.id == 5 %} required {% endif %}/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                      <label class="col-form-label">Date Expired</label>
+                                      <div class="">
+                                         <input type="date" class="form-control worker-details bg-{{data.get_worker_transaction_accreditation.transaction.get_color}}" readonly value='{{data.get_worker_transaction_accreditation.transaction.get_license.date_expired|date:"Y-m-d"}}'>
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Validity</label>
+                                        <div class="">
+                                            <input type="number" class="form-control worker-details wvalidity bg-{{data.get_worker_transaction_accreditation.transaction.get_color}}" name="worker_validity" value='{{data.get_worker_transaction_accreditation.transaction.get_license.validity}}' placeholder="Validity" {% if data.get_worker_transaction_accreditation.transaction.status.id == 4 or data.get_worker_transaction_accreditation.transaction.status.id == 5 %} required {% endif %} />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Level</label>
+                                        <div class="">
+                                            <select class="form-control id_wlevels worker-details" name="worker_level">
+                                                <option></option>
+                                                {% for l in levels %}
+                                                {% if data.get_worker_transaction_accreditation.transaction.get_license.level == l %}
+                                                <option value="{{l.id}}" selected>{{l.name}}</option>
+                                                {% else %}
+                                                <option value="{{l.id}}">{{l.name}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Remarks</label>
+                                        <div class="">
+                                            <input type="text" class="form-control worker-details" name="remarks" value="{{data.get_worker_transaction_accreditation.transaction.remarks}}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="d-flex justify-content-end mt-3">
+                             <button class="btn btn-primary workerDetailsSaveBtn p-2" type="submit" data-role="workerDetailsSaveBtn" hidden><i class="fa fa-save"></i> Save Contact Person</button>
+                             <button class="btn btn-warning workerDetailsUpdateBtn p-2" type="button" data-role="workerDetailsUpdateBtn"><i class="fa fa-edit"></i> Update Contact Person</button>
+                             &nbsp;<!--
+                             <button class="btn btn-danger workerDetailsRemoveBtn p-2" type="button" data-role="workerDetailsRemoveBtn" hidden><i class="fa fa-minus-square"></i> Remove</button>
+                            -->
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- END OF WORKER DETAILS -->
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <label>Created by: <b>{% get_user_by data.created_by.id %}</b></label>
+</div>
+{% block script %}
+<script for="license">
+    var license = `<div class="b-primary border-2 p-3 b-r-3 mb-2 license">
+                        <form class="needs-validation was-validated licenseDetailsForm" id="licenseDetailsForm"  novalidate="" method="POST" action="{% url 'frontend-update' 'add-license-details' %}">
+                            {% csrf_token %}
+                            <div class="row">
+                                <input type="hidden" class="form-control license_count" name="license_count">
+                                <input type="hidden" class="form-control" name="org_id" value="{{data.id}}">
+                                <input type="hidden" class="form-control transaction_id" name="transaction_id">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Process <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <select class="form-control id_process license-details" name="process" required>
+                                            <option></option>
+                                            {% for row in process %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="invalid-feedback text-danger">Please select a process.</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Complete Docs</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details" name="date_complete_docs"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Endorsed</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details" name="date_endorsed"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Assessed</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details" name="date_assessed"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Returned</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details" name="date_returned"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Assessed by</label>
+                                    <div class="">
+                                        <input type="text" class="form-control license-details" name="assessed_by"/>
+                                    </div>
+                                </div>
+                                {% if transaction_attribute %} {% for row in transaction_attribute %}
+                                <div class="col-sm-{{row.width}} mb-2">
+                                    <label class="col-form-label">{{row.name}}{% if row.is_required %} <i style="color: #dc3545;">*</i>{% endif %}</label>
+                                    <div class="">
+                                        <input type="{{row.input_type}}" class="form-control license-details" name="transaction-attribute-{{row.id}}" {% if row.is_required %} required{% endif %} />
+                                    </div>
+                                </div>
+                                {% endfor %} {% endif %}
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Status <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <select class="form-control id_status license-details" name="status" required>
+                                            <option></option>
+                                            {% for row in status %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="invalid-feedback text-danger">Please select a status.</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">No <i style="color: #dc3545;">(R/L/A)</i></label>
+                                    <div class="">
+                                        <input type="text" class="form-control license-details license_key" name="license_key" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Date Issued</label>
+                                    <div class="">
+                                        <input type="date" class="form-control license-details date_issued" name="date_issued" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Validity</label>
+                                    <div class="">
+                                        <input type="number" class="form-control license-details validity" name="validity" placeholder="Enter months to expire" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Level</label>
+                                    <div class="">
+                                        <select class="form-control id_levels license-details" name="level">
+                                            <option></option>
+                                            {% for row in levels %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                {% if data.org_type.id == 3 %}
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Process Type</label>
+                                    <div class="">
+                                        <select class="form-control id_process_type license-details" name="process_type">
+                                            <option></option>
+                                            {% for row in process_types %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Remarks</label>
+                                    <div class="">
+                                        <input type="text" class="form-control license-details" name="remarks" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end mt-3">
+                             <button class="btn btn-primary licenseDetailsSaveBtn p-2" type="submit" data-role="licenseDetailsSaveBtn"><i class="fa fa-save"></i> Save License</button>
+                             <button class="btn btn-warning licenseDetailsUpdateBtn p-2" type="button" data-role="licenseDetailsUpdateBtn" hidden><i class="fa fa-edit"></i> Update License</button>
+                           </div>
+                        </form>
+                    </div>`;
+</script>
+<script for="worker">
+    var worker = `<div class="b-primary border-2 p-3 b-r-3 mb-2 worker">
+                        <form id="workerDetailsForm" class="workerDetailsForm needs-validation was-validated" novalidate="" method="POST" action="{% url 'frontend-update' 'add-worker-details' %}">
+                            {% csrf_token %}
+                            <div class="row mb-2">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">First Name <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <input type="hidden" class="form-control" name="type_id" value="{{data.org_type.id}}">
+                                        <input type="hidden" class="form-control" name="org_id" value="{{data.id}}">
+                                        <input type="hidden" class="form-control worker_count" name="worker_count">
+                                        <input type="text" class="form-control worker-details" name="first_name" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Middle Name</label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="middle_name" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Last Name <i style="color: #dc3545;">*</i></label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="last_name" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <label class="col-form-label">Ext</label>
+                                    <div class="">
+                                        <select class="form-control id_ext_name worker-details" name="ext_name">
+                                            <option></option>
+                                            {% for row in extensions %}
+                                            <option value="{{row.id}}">{{row.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label class="col-form-label">Sex</label>
+                                    <div class="">
+                                        <select class="form-control id_sex worker-details" name="sex">
+                                            <option></option>
+                                            <option value="1">Male</option>
+                                            <option value="0">Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Address</label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="address">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="col-form-label">Province</label>
+                                    <div class="">
+                                        <input type="text" class="form-control worker-details" name="province">
+                                    </div>
+                                </div>
+                                {% for row in worker_attribute %}
+                                <div class="col-sm-{{row.width}}">
+                                    <label class="col-form-label">{{row.name}} {% if row.is_required == 1 %} <i style="color: #dc3545;">*</i> {% endif %}</label>
+                                    <div class="">
+                                        <input type="{{row.input_type}}" class="form-control worker-details" name="worker-attribute-{{row.id}}" {% if row.is_required == 1 %} required {% endif %}>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <hr>
+                            {% if data.org_type.acronym == 'cdc' %}
+                            <div class="license-col">
+                                <div class="row mb-2">
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Process <i style="color: #dc3545;">*</i></label>
+                                        <div class="">
+                                            <select class="form-control id_wprocess worker-details" name="process" required>
+                                                <option></option>
+                                                {% for row in process %}
+                                                <option value="{{row.id}}">{{row.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <div class="invalid-feedback text-danger">Please select a process.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Complete Docs</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="date_complete_docs" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Endorsed</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="date_endorsed" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Assessed</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="date_assessed" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Returned</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details" name="date_returned" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Assessed by</label>
+                                        <div class="">
+                                            <input type="text" class="form-control worker-details" name="assessed_by" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Status <i style="color: #dc3545;">*</i></label>
+                                        <div class="">
+                                            <select class="form-control id_wstatus worker-details" name="status" required>
+                                                <option></option>
+                                                {% for row in status %}
+                                                <option value="{{row.id}}">{{row.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <div class="invalid-feedback text-danger">Please select a status.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">No <i style="color: #dc3545;">(R/L/A)</i></label>
+                                        <div class="">
+                                            <input type="text" class="form-control worker-details wlicense_key" name="license_key" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Date Issued</label>
+                                        <div class="">
+                                            <input type="date" class="form-control worker-details wdate_issued" name="date_issued" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Validity</label>
+                                        <div class="">
+                                            <input type="number" class="form-control worker-details wvalidity" name="validity" placeholder="Enter months to expire" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Level</label>
+                                        <div class="">
+                                            <select class="form-control id_wlevels worker-details" name="level">
+                                                <option></option>
+                                                {% for row in levels %}
+                                                <option value="{{row.id}}">{{row.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Remarks</label>
+                                        <div class="">
+                                            <input type="text" class="form-control worker-details" name="worker_remarks" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="d-flex justify-content-end mt-3">
+                             <button class="btn btn-primary workerDetailsSaveBtn p-2" type="submit" data-role="workerDetailsSaveBtn"><i class="fa fa-save"></i> Save Contact Person</button>
+                             <button class="btn btn-warning workerDetailsUpdateBtn p-2" type="button" data-role="workerDetailsUpdateBtn" hidden><i class="fa fa-edit"></i> Update Contact Person</button>
+                             &nbsp;
+                             <button class="btn btn-danger workerDetailsRemoveBtn p-2" type="button" data-role="workerDetailsRemoveBtn" hidden><i class="fa fa-minus-square"></i> Remove Contact Person</button>
+                            </div>
+                        </form>
+                    </div>`
+</script>
+<script>
+    $(document).on("click", 'button[data-role="btn-remove-worker"]', function () {
+        $(this).parents(".worker-row").remove();
+    });
+
+    function initialize_selects() {
+        $(".id_ext_name").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#workerDetailsForm"),
+        });
+        $(".id_sex").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#workerDetailsForm"),
+        });
+
+        $(".id_wprocess").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#workerDetailsForm"),
+        });
+
+        $(".id_wstatus").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#workerDetailsForm"),
+        });
+
+        $(".id_wlevels").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#workerDetailsForm"),
+        });
+
+        $(".id_process").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#licenseDetailsForm"),
+        });
+        $(".id_process_type").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#licenseDetailsForm"),
+        });
+        $(".id_status").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#licenseDetailsForm"),
+        });
+
+        $(".id_levels").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#licenseDetailsForm"),
+        });
+
+        $(".id_services").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#basicDetailsForm"),
+        });
+
+        $(".id_service_modes").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#basicDetailsForm"),
+        });
+
+        $(".id_agency_types").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#basicDetailsForm"),
+        });
+    }
+
+    $(document).ready(function (e) {
+        $('button[data-role="btn-add-worker"]').on("click", function () {
+            $('#worker-details').prepend(worker);
+            initialize_selects();
+        });
+
+        $('button[data-role="btn-add-license"]').on("click", function () {
+            $('#license-details').prepend(license);
+            initialize_selects();
+        });
+
+        $("#basicDetailsForm input").on("invalid", function (e) {
+            $(".notify-alert").each(function (e) {
+                $(this).remove();
+            });
+            $.notify(
+                {
+                    icon: "fa fa-warning",
+                    message: "&emsp;&emsp;Unable to save. Please check all required fields.",
+                },
+                notify_settings
+            );
+        });
+
+        $("#additionalDetailsForm input").on("invalid", function (e) {
+            $(".notify-alert").each(function (e) {
+                $(this).remove();
+            });
+            $.notify(
+                {
+                    icon: "fa fa-warning",
+                    message: "&emsp;&emsp;Unable to save. Please check all required fields.",
+                },
+                notify_settings
+            );
+        });
+
+        var select2options = {
+            placeholder: "Select",
+            triggerChange: true,
+            allowClear: false,
+            width: "resolve",
+            dropdownParent: $("#basicDetailsForm"),
+        };
+        $("#province").select2(select2options);
+        $("#citymun").select2(select2options);
+        $("#barangay").select2(select2options);
+        var provinceCascade = Select2Cascade($("#province"), $("#citymun"), "/admin/get/citymun/:parentId:", select2options);
+        var citymunCascade = Select2Cascade($("#citymun"), $("#barangay"), "/admin/get/barangay/:parentId:", select2options);
+        initialize_selects();
+    });
+</script>
+<script>
+    $('.basic-details').prop('disabled', true);
+    $('.additional-details').prop('disabled', true);
+    $('.license-details').prop('disabled', true);
+    $('.worker-details').prop('disabled', true);
+
+    $('#basicDetailsForm').on('submit', (e) => {
+        e.preventDefault(e);
+        swal({
+            title: "Are you sure",
+            text: "Please Confirm",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((result) => {
+            if(result){
+                $('#basic-details').addClass('disabled-style');
+                $('#basicDetailsSaveBtn').html('<i class="fa fa-spin fa-spinner"></i> Saving...');
+                const formData = $("#basicDetailsForm").serialize();
+                const url = $("#basicDetailsForm").attr("action");
+                const type = $("#basicDetailsForm").attr("method");
+                $.ajax({
+                    type: type,
+                    url: url,
+                    data: formData,
+                    success: (result) => {
+                        swal({
+                            title: "Success",
+                            text: result['statusMsg'],
+                            icon: "success",
+                        }).then(() => {
+                            $('.basic-details').prop('disabled', true);
+                            $('#basicDetailsSaveBtn').prop('hidden', true).html('<i class="fa fa-save"></i> Save Detailss');
+                            $('#basicDetailsUpdateBtn').prop('hidden', false);
+                            $('#basic-details').removeClass('disabled-style');
+                            $('#additional-info-tab').removeClass('disabled');
+                        });
+                    },
+                    error: (result) => {
+                        const statusMsg = result["responseJSON"]["statusMsg"];
+                        const errors = result["responseJSON"]["errors"];
+                        swal({
+                            title: "Error",
+                            text: statusMsg,
+                            icon: "error",
+                        }).then(() => {
+                            $('#basicDetailsSaveBtn').html('<i class="fa fa-save"></i> Save Details');
+                            $('#basic-details').removeClass('disabled-style');
+                        });
+                    },
+                });
+
+            }
+
+        });
+    });
+
+    $('#basicDetailsUpdateBtn').on('click', () => {
+        $('.basic-details').prop('disabled', false);
+        $('#basicDetailsSaveBtn').prop('hidden', false);
+        $('#basicDetailsUpdateBtn').prop('hidden', true);
+    });
+
+    $('#additionalDetailsForm').on('submit', (e) => {
+        e.preventDefault(e);
+        swal({
+            title: "Are you sure",
+            text: "Please Confirm",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((result) => {
+            if(result){
+                $('#additional-details').addClass('disabled-style');
+                $('#additionalDetailsSaveBtn').html('<i class="fa fa-spin fa-spinner"></i> Saving...');
+                const formData = $("#additionalDetailsForm").serialize();
+                const url = $("#additionalDetailsForm").attr("action");
+                const type = $("#additionalDetailsForm").attr("method");
+                $.ajax({
+                    type: type,
+                    url: url,
+                    data: formData,
+                    success: (result) => {
+                        swal({
+                            title: "Success",
+                            text: result['statusMsg'],
+                            icon: "success",
+                        }).then(() => {
+                            $('.additional-details').prop('disabled', true);
+                            $('#additional-details').removeClass('disabled-style');
+                            $('#additionalDetailsSaveBtn').prop('hidden', true).html('<i class="fa fa-save"></i> Save Additionals');
+                            $('#additionalDetailsUpdateBtn').prop('hidden', false);
+                            $('#additionalDetailsForm').prop('action', '/dashboard/update_record/update-additional-details');
+                            $('#worker-tab').removeClass('disabled');
+                        });
+                    },
+                    error: (result) => {
+                        const statusMsg = result["responseJSON"]["statusMsg"];
+                        const errors = result["responseJSON"]["errors"];
+                        swal({
+                            title: "Error",
+                            text: statusMsg,
+                            icon: "error",
+                        }).then(() => {
+                            ('#additionalDetailsSaveBtn').html('<i class="fa fa-save"></i> Save Additionals');
+                            $('#additional-details').removeClass('disabled-style');
+                        });
+                    },
+                });
+
+            }
+
+        });
+    });
+
+    $('#additionalDetailsUpdateBtn').on('click', () => {
+        $('.additional-details').prop('disabled', false);
+        $('#additionalDetailsSaveBtn').prop('hidden', false);
+        $('#additionalDetailsUpdateBtn').prop('hidden', true);
+    });
+
+    $(document).on("click", 'button[data-role="workerDetailsSaveBtn"]', function () {
+        $(this).closest(".worker").children('.workerDetailsForm').on('submit', (e) => {
+            e.preventDefault();
+            if($(this).closest(".worker").children('.workerDetailsForm')[0].checkValidity() === true){
+                swal({
+                    title: "Are you sure",
+                    text: "Please Confirm",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((result) => {
+                    if(result){
+                        $(this).closest(".worker").addClass('disabled-style');
+                        $(this).html('<i class="fa fa-spin fa-spinner"></i> Saving...');
+                        const formData = $(this).closest(".worker").children('.workerDetailsForm').serialize();
+                        const url = $(this).closest(".worker").children('.workerDetailsForm').attr("action");
+                        const type = $(this).closest(".worker").children('.workerDetailsForm').attr("method");
+                        $.ajax({
+                            type: type,
+                            url: url,
+                            data: formData,
+                            success: (result) => {
+                                const worker_count = result['worker_count'];
+                                swal({
+                                    title: "Success",
+                                    text: result['statusMsg'],
+                                    icon: "success",
+                                }).then(() => {
+                                    location.reload(true);
+                                });
+                            },
+                            error: (result) => {
+                                const statusMsg = result["responseJSON"]["statusMsg"];
+                                const errors = result["responseJSON"]["errors"];
+                                swal({
+                                    title: "Error",
+                                    text: statusMsg,
+                                    icon: "error",
+                                }).then(() => {
+                                    $(this).html('<i class="fa fa-save"></i> Save');
+                                    $(this).closest(".worker").removeClass('disabled-style');
+                                });
+                            },
+                        });
+
+                    }
+
+                });
+            }
+        });
+    });
+
+    $(document).on("click", 'button[data-role="workerDetailsUpdateBtn"]', function () {
+        $(this).closest(".worker").children('.workerDetailsForm').find('.worker-details').prop('disabled', false);
+        $(this).prop('hidden', true);
+        $(this).closest(".worker").children('.workerDetailsForm').find('.workerDetailsSaveBtn').prop('hidden', false);
+    });
+
+    $(document).on("click", 'button[data-role="licenseDetailsSaveBtn"]', function () {
+        $(this).closest(".license").children('.licenseDetailsForm').on('submit', (e) => {
+            e.preventDefault();
+            swal({
+                title: "Are you sure",
+                text: "Please Confirm",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((result) => {
+                if(result){
+                    $(this).closest(".license").addClass('disabled-style');
+                    $(this).html('<i class="fa fa-spin fa-spinner"></i> Saving...');
+                    const formData = $(this).closest(".license").children('.licenseDetailsForm').serialize();
+                    const url = $(this).closest(".license").children('.licenseDetailsForm').attr("action");
+                    const type = $(this).closest(".license").children('.licenseDetailsForm').attr("method");
+                    $.ajax({
+                        type: type,
+                        url: url,
+                        data: formData,
+                        success: (result) => {
+                            const license_count = result['license_count'];
+                            const transaction_id = result['transaction_id'];
+                            swal({
+                                title: "Success",
+                                text: result['statusMsg'],
+                                icon: "success",
+                            }).then(() => {
+                                location.reload(true);
+                            });
+                        },
+                        error: (result) => {
+                            const statusMsg = result["responseJSON"]["statusMsg"];
+                            const errors = result["responseJSON"]["errors"];
+                            swal({
+                                title: "Error",
+                                text: statusMsg,
+                                icon: "error",
+                            }).then(() => {
+                                $(this).html('<i class="fa fa-save"></i> Save License');
+                                $(this).closest(".license").removeClass('disabled-style');
+                            });
+                        },
+                    });
+                }
+            });
+        });
+    });
+
+    $(document).on("click", 'button[data-role="licenseDetailsUpdateBtn"]', function () {
+        $(this).closest(".license").children('.licenseDetailsForm').find('.license-details').prop('disabled', false);
+        $(this).prop('hidden', true);
+        $(this).closest(".license").children('.licenseDetailsForm').find('.licenseDetailsSaveBtn').prop('hidden', false);
+    });
+
+    $(document).on("change", ".id_status", function (){
+        if($(this).val() == 4 || $(this).val() == 5){
+            $(this).closest(".license").children('.licenseDetailsForm').find('.license_key').prop('required', true);
+            $(this).closest(".license").children('.licenseDetailsForm').find('.date_issued').prop('required', true);
+            $(this).closest(".license").children('.licenseDetailsForm').find('.validity').prop('required', true);
+        }else{
+            $(this).closest(".license").children('.licenseDetailsForm').find('.license_key').prop('required', false);
+            $(this).closest(".license").children('.licenseDetailsForm').find('.date_issued').prop('required', false);
+            $(this).closest(".license").children('.licenseDetailsForm').find('.validity').prop('required', false);
+        }
+    })
+
+    $(document).on("change", ".id_wstatus", function (){
+        if($(this).val() == 4 || $(this).val() == 5){
+            $(this).closest(".worker").children('.workerDetailsForm').find('.wlicense_key').prop('required', true);
+            $(this).closest(".worker").children('.workerDetailsForm').find('.wdate_issued').prop('required', true);
+            $(this).closest(".worker").children('.workerDetailsForm').find('.wvalidity').prop('required', true);
+        }else{
+            $(this).closest(".worker").children('.workerDetailsForm').find('.wlicense_key').prop('required', false);
+            $(this).closest(".worker").children('.workerDetailsForm').find('.wdate_issued').prop('required', false);
+            $(this).closest(".worker").children('.workerDetailsForm').find('.wvalidity').prop('required', false);
+        }
+    })
+</script>
+{% endblock %}

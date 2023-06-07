@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SB-FORM-006-A</title>
+    <style>
+        @media print{
+            html,
+            body{
+                font-size: 11pt;
+                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                  
+            }
+            .page-break {
+                page-break-before: always;
+                border-collapse: collapse;
+            }
+            .btn{
+                display: none;
+            }
+        }
+        @page {
+            size: Legal landscape;
+            margin-top: 1cm !important;
+            text-align: center;
+            border: 1px solid black;
+        }
+
+        .header {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .form {
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        table,
+        td,
+        th {
+            border: 1px solid black;
+            word-wrap: break-word;
+            text-align: center;
+            height: 80px; width: 80px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            
+        }
+
+        tbody {
+            page-break-inside: auto;
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+
+
+    </style>
+</head>
+<body>
+    <page>
+        <div class="content">
+            <p class="form">SB-FORM-006-A</p>
+            <br>
+            <div class="header">
+                <label>AGENCIES ASSESSED FOR ENDORSEMENT TO STANDARDS BUREAU FOR DUTY FREE ENTRY OF FOREIGN DONATIONS</label>
+                <br>
+                <label><b> 2nd Quarter 2021</b></label>
+                <br>
+                <label>FIELD OFFICE: <label class="text-underline">CARAGA</label></label>
+            </div>
+            <!--
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-primary p-1" onclick="addRow()"><i class="fa fa-plus"></i> Add Row</button>
+                &nbsp;
+                <button type="button" class="btn btn-danger p-1" onclick="deleteRow()"><i class="fa fa-minus"></i> Delete Row</button>
+            </div>
+            <br>
+            -->
+            <div {% if action == "load" %} class="table-responsive" {% endif %}>
+                <table id="myTable">
+               
+                     <tr>
+                        <th rowspan="2">Name of Agency and Address</th>
+                        <th rowspan="2">SEC Registration & Date</th>
+                        <th rowspan="2">Status</th>
+                        <th rowspan="2">Bill of Lading</th>
+                        <th rowspan="2">Volume of Goods per Item</th>
+                        <th rowspan="2">Donor / Country of Origin </th>
+                        <th rowspan="2">Target Areas & Beneficiaries </th>
+                        <th colspan="8">FO PROCESS</th>
+
+                    </tr>
+                    <tr>
+                        <td>Date Received Application</td>
+                        <td>Date of Receipt of Complete Documents</td>
+                        <td>Endorsed</td>
+                        <td>Date Endorsed </td>
+                        <td>Not Endorsed </td>
+                        <td>Date Returned to NGO</td>
+                        <td>Reason (if not endorsed)</td>
+                        <td>No. of Days Acted Upon</td>
+                    </tr>
+                
+                    <tbody contenteditable="true">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <div class="bottom">
+                    <div style="float: left; width: 33%;">
+                    <p>Prepared By:</p>
+                    <br>
+                    <label contenteditable="true"><b>ARCHIE D TURTUR, PDO-III</b></label>
+                    <p contenteditable="true">STANDARDS SECTION HEAD</p>
+                    </div>
+                    <div style="float: left; width: 33%;">
+                    <p>Noted By:</p>
+                    <br>
+                    <label contenteditable="true"><b>ALDIE MAE A. ANDOY, SWO IV</b></label>
+                    <p contenteditable="true">OIC-CHIEF, PPD</p>
+                    </div>
+                    <div style="float: left; width: 33%;">
+                    <p>Approved By:</p>
+                    <br>
+                    <label contenteditable="true"><b>RAMEL F. JAMEN</b></label>
+                    <p contenteditable="true">OIC- REGIONAL DIRECTOR</p>
+                    </div>
+                  </div>
+            </div>
+        </div>
+        <script>
+        function addRow() {
+          let table = document.getElementById("myTable");
+          let tableRowCount = CountRows();
+          
+          var row = table.insertRow(tableRowCount);
+          for(let i=0; i <= 14; i++){
+            row.insertCell(i).innerHTML = ``;
+          }
+        }
+
+        function deleteRow(){
+            let totalRowCount = CountRows();
+            if(totalRowCount > 2){
+                document.getElementById("myTable").deleteRow(totalRowCount-1);
+            }
+        }
+
+        function CountRows() {
+            let totalRowCount = 0;
+            let rowCount = 0;
+            let table = document.getElementById("myTable");
+            let rows = table.getElementsByTagName("tr")
+            console.log(rows)
+            for (let i = 0; i < rows.length; i++) {
+                totalRowCount++;
+                if (rows[i].getElementsByTagName("td").length > 0) {
+                    rowCount++;
+                }
+            }
+            return totalRowCount
+        }
+        </script>
+
+    </page>
+</body>
+</html>

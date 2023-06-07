@@ -1,0 +1,179 @@
+{% extends 'frontend/header.html' %}
+{% load tags %}
+{% load static %}
+{% block body %}
+<div class="col-sm-12" data-spy="scroll" data-target="program-cdc">
+   <div class="card">
+      <div class="card-body">
+         <ul class="nav nav-tabs border-tab nav-primary" id="program-tab" role="tablist">
+            {% for row in types %}
+            <li class="nav-item"><a class="nav-link" href="/dashboard/records/{{row.acronym}}" id="program-{{row.acronym}}-tab" role="tab" aria-controls="info-cso" aria-selected="true">{{row.acronym|upper}}</a></li>
+            {% endfor %}
+         </ul>
+         <div class="tab-content" id="info-tabContent">
+            <div class="tab-container" id="tab-container">
+               <div class="row">
+                  <div class="col-3">
+                     <form id="filterForm"
+                        hx-get="/dashboard/records/{{acronym}}/filter"
+                        hx-trigger="submit"
+                        hx-target="#records_view"
+                        hx-swap="innnerHTML">
+                        <div class="card p-4">
+                           <div class="row">
+                              <h6>Filters</h6>
+                           </div>
+                           <hr>
+                           <div class="row">
+                              <div class="form-group mb-3">
+                                 <label>Keyword</label>
+                                 <input type="text" class="form-control" name="keyword" placeholder="Enter Keyword">
+                              </div>
+                              <div class="form-group mb-3">
+                                 <label>Province</label>
+                                 <select class="form-control select" name="fprovince" id="fprovince" tabindex="2">
+                                    <option></option>
+                                    {% for row in p %}
+                                    <option value="{{ row.id }}">{{ row.name }}</option>
+                                    {% endfor %}
+                                 </select>
+                              </div>
+                              <div class="form-group mb-3">
+                                 <label>City / Municipality</label>
+                                 <select class="form-control select" name="fcity" id="fcity" tabindex="4"></select>
+                              </div>
+                              <div class="form-group mb-3">
+                                 <label>Barangay</label>
+                                 <select class="form-control select" name="fbarangay" id="fbarangay" tabindex="5"></select>
+                              </div>
+                           </div>
+                           <div class="row">
+                              <div class="form-group text-end">
+                                 <button type="submit" class="btn btn-warning">Preview</button>
+                              </div>
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+                  <div class="col-9" id="records_view">
+                     {% if acronym == 'cso' %}
+                        {% include 'frontend/records/partials/cso_filter_partial.html' %}
+                     {% elif acronym == 'cdc' %}
+                        {% include 'frontend/records/partials/cdc_filter_partial.html' %}
+                     {% elif acronym == 'swda' %}
+                        {% include 'frontend/records/partials/swda_filter_partial.html' %}
+                     {% elif acronym == 'swmcc' %}
+                        {% include 'frontend/records/partials/swmcc_filter_partial.html' %}
+                     {% elif acronym == 'pmc' %}
+                        {% include 'frontend/records/partials/pmc_filter_partial.html' %}
+                     {% elif acronym == 'scc' %}
+                        {% include 'frontend/records/partials/scc_filter_partial.html' %}
+                     {% elif acronym == 'ps' %}
+                        {% include 'frontend/records/partials/ps_filter_partial.html' %}
+                     {% endif %}
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}
+{% block script %}
+<script src="{% static '/assets/js/select2/select2.full.min.js' %}"></script>
+<script src="{% static '/assets/js/select2/select2-cascade.js' %}"></script>
+<script src="https://unpkg.com/htmx.org@1.7.0" integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous" defer></script>
+<script>
+    $(document).ready(() => {
+      var select2options = {
+      placeholder: "Select",
+      triggerChange: true,
+      allowClear: true,
+      width: "resolve",
+      dropdownParent: $("#filterForm"),
+       };
+      $("#fprovince").select2(select2options);
+      $("#fcity").select2(select2options);
+      $("#fbarangay").select2(select2options);
+      var provinceCascade = Select2Cascade($("#fprovince"), $("#fcity"), "/admin/get/citymun/:parentId:", select2options);
+      var citymunCascade = Select2Cascade($("#fcity"), $("#fbarangay"), "/admin/get/barangay/:parentId:", select2options);
+
+      $('#program-{{acronym}}-tab').addClass('active');
+
+
+    });
+   const addRecordButton = (acronym) => {
+       $('#addRecordModal').modal('show');
+       $('#addRecordModalContent').empty();
+       $('#addRecordModalContent').load('{% url 'frontend-generate-form' 999999999 %}'.replace(999999999, `${acronym}`));
+      }
+
+   const generateReportButton = (type, filters) => {
+       $('#generateReportModal').modal('show');
+       $('#generateReportModalContent').empty();
+       $('#generateReportModalContent').load('generate_report/${type}/${filters}');
+      }
+
+   const viewRecordModal = (acronym, pk) => {
+      $('#viewRecordModal').modal('show');
+      $('#viewRecordModalContent').empty();
+      $('#viewRecordModalContent').load(`/dashboard/view_record/${acronym}/view/${pk}`);
+   }
+
+
+   "THIS IS GENERATE REPORT SCRIPT"
+   $('#id_forms').select2({
+        placeholder: "Select Form",
+        width: 'resolve',
+        dropdownParent: $('#filterReportForm'),
+   });
+
+   $('#id_quarters').select2({
+        placeholder: "Select Quarter",
+        width: 'resolve',
+        dropdownParent: $('#filterReportForm'),
+   });
+
+    $('#id_years').select2({
+        placeholder: "Select Year",
+        width: 'resolve',
+        dropdownParent: $('#filterReportForm'),
+   });
+   $('#filterReportForm').on('submit', (e) => {
+      e.preventDefault(e);
+      if($('#filterReportForm')[0].checkValidity() === true){
+         const formData = $("#filterReportForm").serialize();
+         const url = $("#filterReportForm").attr("action");
+         const type = $("#filterReportForm").attr("method");
+         $.ajax({
+            type: type,
+            url: url,
+            data: formData,
+            success: (result) => {
+               $('#generateReportContent').empty();
+               $('#generateReportContent').append(result);
+            }
+         });
+      }
+
+   });
+
+   function printDiv()
+   {
+
+     var divToPrint=document.getElementById('generateReportContent');
+
+     var newWin=window.open('','Print-Window');
+
+     newWin.document.open();
+
+     newWin.document.write('<html><body onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
+
+     newWin.document.close();
+
+     setTimeout(function(){newWin.close();},10);
+
+   }
+
+</script>
+{% endblock %}

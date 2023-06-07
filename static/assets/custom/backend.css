@@ -1,0 +1,62 @@
+.select2-container .select2-selection--single {
+    border-color: #ced4da;
+}
+
+.form-control {
+	font-size: 14px;
+}
+.cso_datatable  tr:hover{
+    color: red;
+    cursor: pointer;
+}
+
+.cdc_datatable  tr:hover{
+    color: red;
+    cursor: pointer;
+}
+
+.swda_datatable  tr:hover{
+    color: red;
+    cursor: pointer;
+}
+
+.swmcc_datatable  tr:hover{
+    color: red;
+    cursor: pointer;
+}
+.pmc_datatable  tr:hover{
+    color: red;
+    cursor: pointer;
+}
+.scc_datatable  tr:hover{
+    color: red;
+    cursor: pointer;
+}
+.ps_datatable tr:hover{
+    color: red;
+    cursor: pointer;
+}
+
+#additional-details{
+    height:250px;
+    overflow-y: scroll;
+}
+
+#worker-details{
+    height:400px;
+    overflow-y: scroll;
+}
+
+#license-details{
+    height:400px;
+    overflow-y: scroll;
+}
+
+.disabled-style{
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+.cursor-pointer{
+    cursor: pointer;
+}

@@ -1,0 +1,137 @@
+{% extends 'frontend/header.html' %}
+{% load tags %}
+
+{% block body %}
+{% include 'frontend/alert-messages.html' %}
+{% if action == "users" %}
+<div class="col-sm-12">
+	<div class="card">
+		<div class="card-body">
+			<div class="d-flex justify-content-end mb-3"><button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button></div>
+			<div class="table-responsive p-1">
+				<table class="table table-hover table-sm datatable">
+					<thead>
+					<tr class="text-center">
+						<th>No.</th>
+						<th>Username</th>
+						<th>Full name</th>
+						<th>Email</th>
+						<th>Groups</th>
+						<th>Active</th>
+						<th>Superuser</th>
+						<th>Staff</th>
+						<th>Actions</th>
+						<th>Last Logged in</th>
+					</tr>
+					</thead>
+					<tbody>
+					{% for row in data %}
+					<tr>
+						<td class="text-center">{{row.id}}</td>
+						<td class="text-center">{{row.username}}</td>
+						<td class="text-center">{% get_user_by row.id %}</td>
+						<td class="text-center">{{row.email}}</td>
+						{% if row.groups.exists %}
+						<td class="text-center text-capitalize">{{row.groups.all.0}}</td>
+						{% else %}
+						<td class="text-center text-danger"><i class="fa fa-times-circle f-18"></i></td>
+						{% endif %}
+						{% if row.is_active is True %}
+						<td class="text-center text-success"><i class="fa fa-check-circle-o f-18"></i></td>
+						{% else %}
+						<td class="text-center text-danger"><i class="fa fa-times-circle f-18"></i></td>
+						{% endif %}
+						{% if row.is_superuser is True %}
+						<td class="text-center text-success"><i class="fa fa-check-circle-o f-18"></i></td>
+						{% else %}
+						<td class="text-center text-danger"><i class="fa fa-times-circle f-18"></i></td>
+						{% endif %}
+						{% if row.is_staff is True %}
+						<td class="text-center text-success"><i class="fa fa-check-circle-o f-18"></i></td>
+						{% else %}
+						<td class="text-center text-danger"><i class="fa fa-times-circle f-18"></i></td>
+						{% endif %}
+						<td>
+							<div class="d-flex justify-content-center">
+								<a href="{% url 'backend-users-page' action='update' pk=row.id %}" class="text-decoration-none text-danger"><i class="fa fa-edit f-18"></i></a>
+							</div>
+						</td>
+						{% if row.last_login is None %}
+						<td class="text-center"></td>
+						{% else %}
+						<td class="text-center">{{row.last_login}}</td>
+						{% endif %}
+					</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% elif action == "update_user" %}
+<div class="col-sm-12">
+	<div class="card">
+		<form class="theme-form updateForm" id="updateUserForm" method="POST" action="{% url 'backend-users-page' action='update' pk=data.id%}">
+			<div class="card-body">
+				{% csrf_token %}
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label">Username <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-9">
+						{{form.username}}
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label">First name <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-9">
+						{{form.first_name}}
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label">Last name <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-9">
+						{{form.last_name}}
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label">Email <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-9">
+						{{form.email}}
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label">Group <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-9">
+						{{form.group}}
+					</div>
+				</div>
+				<div class="row mb-1">
+					<label class="col-sm-3 col-form-label pb-0"></label>
+					<div class="col-sm-9">
+						<div class="mb-0">
+							<div class="m-checkbox-inline">
+								{{form.is_active}}
+								<label class="form-check-label" for="id_is_active">Active</label>
+								{{form.is_superuser}}
+								<label class="form-check-label" for="id_is_superuser">Superuser</label>
+								{{form.is_staff}}
+								<label class="form-check-label" for="id_is_superuser">Staff</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="mt-2">
+					<ul class="errors">
+
+					</ul>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a href="{% url 'backend-users-page' %}" class="btn btn-secondary">Back</a>
+				<button class="btn btn-primary" type="submit">Update</button>
+			</div>
+		</form>
+	</div>
+</div>
+{% endif %}
+{% endblock %}

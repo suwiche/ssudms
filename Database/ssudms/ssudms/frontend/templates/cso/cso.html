@@ -1,0 +1,671 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8" />
+      <title>SSUDMS | Civil Society Organization</title>
+       {% csrf_token %}
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta content="SSUDMS Portal" name="description" />
+      <!-- App favicon -->
+      <link rel="shortcut icon" href="{% static 'assets/images/dswdcaragregionlogo.jpg' %}">
+      <!-- Fonts Css -->
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet">
+      <link href="{% static 'assets/images/dswdcaragregionlogo.jpg' %}" rel="stylesheet">
+      <!-- Bootstrap Css -->
+      <link href="{% static 'assets/libs/select2/css/select2.min.css' %}" rel="stylesheet" />
+      <link href="{% static 'assets/css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+      <link href="{% static 'assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+      <!-- Icons Css -->
+      <link href="{% static 'assets/css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+      <link href="{% static 'assets/fontawesome/css/all.min.css' %}" rel="stylesheet">
+      <!-- App Css-->
+      <link href="{% static 'assets/css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+      <link href="{% static 'assets/css/index.css' %}" rel="stylesheet" type="text/css">
+   </head>
+   <body data-sidebar="dark">
+      <!-- Begin page -->
+      <div id="layout-wrapper">
+         <header id="page-topbar">
+            <div class="navbar-header">
+               <div class="d-flex">
+                  <!-- LOGO -->
+                  <div class="navbar-brand-box">
+                     <a href="index.html" class="logo logo-dark">
+                     <span class="logo-sm">
+                     <img src="{% static 'assets/images/dashboardlogosmall.png' %}" alt="" height="22">
+                     </span>
+                     <span class="logo-lg">
+                     <img src="{% static 'assets/images/dashboardlogo.png' %}" alt="" height="20">
+                     </span>
+                     </a>
+                     <a href="index.html" class="logo logo-light">
+                     <span class="logo-sm">
+                     <img src="{% static 'assets/images/dashboardlogosmall.png' %}" alt="" height="22">
+                     </span>
+                     <span class="logo-lg">
+                     <img src="{% static 'assets/images/dashboardlogo.png' %}" alt="" height="20">
+                     </span>
+                     </a>
+                  </div>
+                  <button type="button"
+                     class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
+                  <i class="fa fa-fw fa-bars"></i>
+                  </button>
+                  <!-- App Search-->
+                  <form class="app-search d-none d-lg-block">
+                     <div class="position-relative">
+                        <input type="text" class="form-control" placeholder="Search...">
+                        <span class="uil-search"></span>
+                     </div>
+                  </form>
+               </div>
+               <div class="d-flex">
+                  <div class="dropdown d-inline-block d-lg-none ms-2">
+                     <button type="button" class="btn header-item noti-icon waves-effect"
+                        id="page-header-search-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                     <i class="uil-search"></i>
+                     </button>
+                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                        aria-labelledby="page-header-search-dropdown">
+                        <form class="p-3">
+                           <div class="m-0">
+                              <div class="input-group">
+                                 <input type="text" class="form-control" placeholder="Search ..."
+                                    aria-label="Recipient's username">
+                                 <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit"><i
+                                       class="mdi mdi-magnify"></i></button>
+                                 </div>
+                              </div>
+                           </div>
+                        </form>
+                     </div>
+                  </div>
+                  <div class="dropdown d-none d-lg-inline-block ms-1">
+                     <button type="button" class="btn header-item noti-icon waves-effect"
+                        data-bs-toggle="fullscreen">
+                     <i class="far fa-expand-arrows-alt"></i>
+                     </button>
+                  </div>
+                  <div class="dropdown d-inline-block">
+                     <button type="button" class="btn header-item noti-icon waves-effect"
+                        id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                     <i class="far fa-bell"></i>
+                     <span class="badge bg-danger rounded-pill">3</span>
+                     </button>
+                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                        aria-labelledby="page-header-notifications-dropdown">
+                        <div class="p-3">
+                           <div class="row align-items-center">
+                              <div class="col">
+                                 <h5 class="m-0 font-size-16"> Notifications </h5>
+                              </div>
+                              <div class="col-auto">
+                                 <a href="#!" class="small"> Mark all as read</a>
+                              </div>
+                           </div>
+                        </div>
+                        <div data-simplebar style="max-height: 230px;">
+                           <a href="" class="text-reset notification-item">
+                              <div class="d-flex align-items-start">
+                                 <div class="flex-shrink-0 me-3">
+                                    <div class="avatar-xs">
+                                       <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                       <i class="uil-shopping-basket"></i>
+                                       </span>
+                                    </div>
+                                 </div>
+                                 <div class="flex-grow-1">
+                                    <h6 class="mb-1">Your order is placed</h6>
+                                    <div class="font-size-12 text-muted">
+                                       <p class="mb-1">If several languages coalesce the grammar</p>
+                                       <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 3 min ago</p>
+                                    </div>
+                                 </div>
+                              </div>
+                           </a>
+                           <a href="" class="text-reset notification-item">
+                              <div class="d-flex align-items-start">
+                                 <div class="flex-shrink-0 me-3">
+                                    <img src="{% static 'assets/images/users/avatar-3.jpg' %}"
+                                       class="rounded-circle avatar-xs" alt="user-pic">
+                                 </div>
+                                 <div class="flex-grow-1">
+                                    <h6 class="mb-1">James Lemire</h6>
+                                    <div class="font-size-12 text-muted">
+                                       <p class="mb-1">It will seem like simplified English.</p>
+                                       <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 1 hours ago</p>
+                                    </div>
+                                 </div>
+                              </div>
+                           </a>
+                           <a href="" class="text-reset notification-item">
+                              <div class="d-flex align-items-start">
+                                 <div class="flex-shrink-0 me-3">
+                                    <div class="avatar-xs">
+                                       <span class="avatar-title bg-success rounded-circle font-size-16">
+                                       <i class="uil-truck"></i>
+                                       </span>
+                                    </div>
+                                 </div>
+                                 <div class="flex-grow-1">
+                                    <h6 class="mb-1">Your item is shipped</h6>
+                                    <div class="font-size-12 text-muted">
+                                       <p class="mb-1">If several languages coalesce the grammar</p>
+                                       <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 3 min ago</p>
+                                    </div>
+                                 </div>
+                              </div>
+                           </a>
+                           <a href="" class="text-reset notification-item">
+                              <div class="d-flex align-items-start">
+                                 <div class="flex-shrink-0 me-3">
+                                    <img src="{% static 'assets/images/users/avatar-4.jpg' %}"
+                                       class="rounded-circle avatar-xs" alt="user-pic">
+                                 </div>
+                                 <div class="flex-grow-1">
+                                    <h6 class="mb-1">Salena Layfield</h6>
+                                    <div class="font-size-12 text-muted">
+                                       <p class="mb-1">As a skeptical Cambridge friend of mine occidental.</p>
+                                       <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 1 hours ago</p>
+                                    </div>
+                                 </div>
+                              </div>
+                           </a>
+                        </div>
+                        <div class="p-2 border-top">
+                           <div class="d-grid">
+                              <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
+                              <i class="uil-arrow-circle-right me-1"></i> View More..
+                              </a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="dropdown d-inline-block">
+                     <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     <img class="rounded-circle header-profile-user"
+                        src="{% static 'assets/images/users/avatar-4.jpg' %}" alt="Header Avatar">
+                     <span class="d-none d-xl-inline-block ms-1 fw-medium font-size-15">
+                     {{ request.user.first_name }} {{ request.user.last_name }}</span>
+                     <i class="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
+                     </button>
+                     <div class="dropdown-menu dropdown-menu-end">
+                        <!-- item-->
+                        <a class="dropdown-item" href="#"><i
+                           class="uil uil-user-circle font-size-18 align-middle text-muted me-1"></i> <span
+                           class="align-middle">View Profile</span></a>
+                        <a class="dropdown-item" href="{% url 'frontend-logout-page' %}"><i
+                           class="uil uil-sign-out-alt font-size-18 align-middle me-1 text-muted"></i> <span
+                           class="align-middle">Sign out</span></a>
+                     </div>
+                  </div>
+                  <div class="dropdown d-inline-block">
+                     <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
+                     <i class="uil-cog"></i>
+                     </button>
+                  </div>
+               </div>
+            </div>
+         </header>
+         <!-- ========== Left Sidebar Start ========== -->
+         <div class="vertical-menu">
+            <!-- LOGO -->
+            <div class="navbar-brand-box">
+               <a href="index.html" class="logo logo-light text-white">
+               <span class="logo-sm">
+               <img src="{% static 'home/assets/img/dashboardlogosmall.png' %}" alt="" height="30" width="25" style="margin-top: -5px">
+               </span>
+               <span class="logo-lg">
+               <img src="{% static 'home/assets/img/dashboardlogo.png' %}" alt="" height="40" width="170" style="margin-top: -5px">
+               </span>
+               </a>
+            </div>
+            <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
+            <i class="fa fa-fw fa-bars"></i>
+            </button>
+            <div data-simplebar class="sidebar-menu-scroll">
+               <!--- Sidemenu -->
+               <div id="sidebar-menu">
+                  <!-- Left Menu Start -->
+                  <ul class="metismenu list-unstyled" id="side-menu">
+                     <li class="menu-title">Menu</li>
+                     <li>
+                        <a href="{% url 'dashboard-dashboard-page' %}" class="" aria-current="page">
+                           <i class="far fa-tachometer-alt-fastest"></i>
+                           <!--<span class="badge rounded-pill bg-primary float-end">01</span>-->
+                           <span>Dashboard</span>
+                        </a>
+                     </li>
+                     <li class="menu-title">Programs
+                     <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="far fa-folders"></i>
+                        <span>CSO</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                           <li><a href="{% url 'cso-index-page' %}">HOME</a></li>
+                           <li><a href="{% url 'cso-add-page' %}">ADD</a></li>
+                           <li disabled><a href="{% url 'cso-update-page' %}">UPDATE</a></li>
+                        </ul>
+                     </li>
+                     <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="far fa-folders"></i>
+                        <span>CDC / CDW</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                           <li><a href="#">HOME</a></li>
+                           <li><a href="ecommerce-orders.html">UPDATE</a></li>
+                           <li><a href="ecommerce-customers.html">DELETE</a></li>
+                        </ul>
+                     </li>
+                     <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="far fa-folders"></i>
+                        <span>SWDA</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                           <li><a href="#">HOME</a></li>
+                           <li><a href="ecommerce-product-detail.html">READ</a></li>
+                           <li><a href="ecommerce-orders.html">UPDATE</a></li>
+                           <li><a href="ecommerce-customers.html">DELETE</a></li>
+                        </ul>
+                     </li>
+                  </ul>
+               </div>
+               <!-- Sidebar -->
+            </div>
+         </div>
+         <!-- Left Sidebar End -->
+         <!-- ============================================================== -->
+         <!-- Start right Content here -->
+         <!-- ============================================================== -->
+         <div class="main-content">
+            <div class="page-content">
+               <div class="container-fluid">
+                  <!-- start page title -->
+                  <div class="row">
+                     <div class="col-12">
+                        <div class="page-title-box d-flex align-items-center justify-content-between">
+                           <h4 class="mb-0">Civil Society Organization</h4>
+                           <div class="page-title-right">
+                              <ol class="breadcrumb m-0">
+                                 <li class="breadcrumb-item"><a href="{% url 'dashboard-dashboard-page' %}">Home</a></li>
+                                 <li class="breadcrumb-item active">Civil Society Organization</li>
+                              </ol>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- end page title -->
+                  <div class="card shadow-md">
+                     <div class="card-body">
+                        <ul class="nav nav-tabs" role="tablist">
+                           <li class="nav-item">
+                              <a class="nav-link {% if action == 'cso' %} active {% else %} {% endif %}" href="{% url 'cso-index-page' %}" role="tab">
+                              <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                              <span class="d-none d-sm-block">DataTable</span>
+                              </a>
+                           </li>
+                           <li class="nav-item">
+                              <a class="nav-link {% if action == 'add' %} active {% else %} {% endif %}" href="{% url 'cso-add-page' %}" role="tab">
+                              <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                              <span class="d-none d-sm-block">Add Organization</span>
+                              </a>
+                           </li>
+                            <li class="nav-item">
+                              <a class="nav-link {% if action == 'update' %} active {% else %} {% endif %} disabled" href="javascript:void(0);" role="tab">
+                              <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                              <span class="d-none d-sm-block">Update Organization</span>
+                              </a>
+                           </li>
+                        </ul>
+                        <!-- Tab panes -->
+                         <div class="tab-content p-3 text-muted">
+                            {% if action == 'cso' %}
+                           <div class="tab-pane {% if action == 'cso' %} active {% else %} {% endif %}" role="tabpanel">
+                              <div class="table-responsive">
+                                 <table id="csoTable" class="table table-striped" style="width:100%">
+                                    <thead>
+                                       <tr class="text-center">
+                                           <th>Actions</th>
+                                           <th>No.</th>
+                                           <th>Name</th>
+                                           <th>Address</th>
+                                           <th>Email</th>
+                                           <th>Landline</th>
+                                           <th>Fax</th>
+                                           <th>Cellphone</th>
+                                           <th>Name</th>
+                                           <th>Designation</th>
+                                           <th>GA</th>
+                                           <th>Approved Program</th>
+                                           <th>Certificate</th>
+                                           <th>Control No.</th>
+                                           <th>Issued</th>
+                                           <th>Expiry</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       {% for i in data %}
+                                          {% if i.transaction == 1 %}
+                                                {% if i.date_left < 31 %}
+                                                    <tr class="text-danger">
+                                                {% else %}
+                                                    <tr class="text-center">
+                                                {% endif %}
+                                          {% elif i.transaction == 0 %}
+                                          <tr class="text-center text-danger">
+                                          {% endif %}
+                                             <td class="bg-white">
+                                                <div class="d-flex justify-content-center">
+                                                    <a href="{% url 'cso-update-page' %}?cso_id={{i.id}}" class="text-success">Update</a>
+                                                    &nbsp;
+                                                    <span class="text-dark">|</span>
+                                                    &nbsp;
+                                                    <a href="javascript: void(0);" class="text-success">Delete</a>
+                                                    &nbsp;
+                                                </div>
+                                             </td>
+                                             <td>{{ i.id }}</td>
+                                             <td>{{ i.name }}</td>
+                                             <td>{{ i.address }}</td>
+                                             <td>{{ i.email }}</td>
+                                             <td>{{ i.landline }}</td>
+                                             <td>{{ i.fax }}</td>
+                                             <td>{{ i.cellphone }}</td>
+                                             <td>{{ i.contact_person }}</td>
+                                             <td>{{ i.designation }}</td>
+                                             <td>{{ i.ga }}</td>
+                                             <td>{{ i.approved_program }}</td>
+                                             {% if i.transaction == 0 %}
+                                             <td></td>
+                                             <td><span id="addTransactionBtn" class="badge badge-primary btn btn-primary" title="Add Transaction"><i class="fas fa-plus"></i></span></td>
+                                             <td></td>
+                                             <td></td>
+                                             {% else %}
+                                                <td>{{ i.certificate }}</td>
+                                                <td>{{ i.control_no }}</td>
+                                                <td>{{ i.issued }}</td>
+                                                <td>{{ i.expiry }}</td>
+                                             {% endif %}
+                                          </tr>
+                                       {% endfor %}
+                                    </tbody>
+                                 </table>
+                              </div>
+                               <div class="d-flex justify-content-end m-3">
+                                   {% if cso.has_previous %}
+                                    <a href="{% url 'cso-index-page' %}?page_num={{cso.previous_page_number}}" class="btn btn-sm btn-primary">Previous</a>
+                                  {% endif %}
+                                  {% if cso.has_next %}
+                                    <a href="{% url 'cso-index-page' %}?page_num={{cso.next_page_number}}" class="btn btn-sm btn-primary">Next</a>
+                                  {% endif %}
+                               </div>
+                           </div>
+                            {% elif action == 'add' %}
+                           <div class="tab-pane {% if action == 'add' %} active {% else %} {% endif %}" role="tabpanel">
+                                <form id="csoForm" method="POST">
+                                    {% csrf_token %}
+                                    <div class="card">
+                                        <div class="card-header bg-primary text-white">Organization Details </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>Organization Name <small class="text-danger">*</small></label>
+                                                    {{ form.org_name }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>Government Agency <small class="text-danger">*</small></label>
+                                                    {{ form.ga }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>Approved Program <small class="text-danger">*</small></label>
+                                                    {{ form.approved_program }}
+                                                </div>
+                                            </div>
+                                            <div class="row" id="cso_address">
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>Select Province <small class="text-danger">*</small></label>
+                                                    {{ form.province }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header bg-primary text-white">Organization Contact Details</div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="form-group mb-3 col-lg-3">
+                                                    <label>Email address:</label>
+                                                    {{ form.email }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-3">
+                                                    <label>Landline:</label>
+                                                    {{ form.landline }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-3">
+                                                    <label>Fax:</label>
+                                                    {{ form.fax }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-3">
+                                                    <label>Cellphone <small class="text-danger">*</small></label>
+                                                    {{ form.cellphone }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header bg-primary text-white">Contact Person</div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>First name <small class="text-danger">*</small></label>
+                                                    {{ form.first_name }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>Middle name:</label>
+                                                    {{ form.middle_name }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>Last name <small class="text-danger">*</small></label>
+                                                    {{ form.last_name }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>Extension:</label>
+                                                    {{ form.extension }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>Designation <small class="text-danger">*</small></label>
+                                                    {{ form.designation }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <label class="mt-1 csoFormMessage">
+                                        </label>
+                                        <button class="btn btn-primary" type="btn">Submit</button>
+                                    </div>
+                                </form>
+                           </div>
+                            {% elif action == 'update' %}
+                            <div class="tab-pane active" role="tabpanel">
+                                <p class="text-primary mt-3 mb-4"><b class="text-danger">Note:</b> Click Save to update specific details.</p>
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white">Organization Details </div>
+                                    <div class="card-body">
+                                        <form id="csoOrgForm" method="POST" action="{% url 'cso-update-page' %}?action=orgdetails&cso_id={{cso.id}}">
+                                            <div class="row">
+                                                {% csrf_token %}
+                                                {{ org_form.cso }}
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>Organization Name <small class="text-danger">*</small></label>
+                                                    {{ org_form.org_name }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>Government Agency <small class="text-danger">*</small></label>
+                                                    {{ org_form.ga }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>Approved Program <small class="text-danger">*</small></label>
+                                                    {{ org_form.approved_program }}
+                                                </div>
+                                            </div>
+                                            <div class="row" id="cso_address">
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>Select Province <small class="text-danger">*</small></label>
+                                                    {{ org_form.province }}
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-end">
+                                                <button class="btn btn-sm btn-danger" type="submit"><i class="far fa-save"></i> Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white">Organization Contact Details</div>
+                                    <div class="card-body">
+                                        <form id="csoContactForm" method="POST" action="{% url 'cso-update-page' %}?action=contactdetails&cso_id={{cso.id}}">
+                                            <div class="row">
+                                                {% csrf_token %}
+                                                {{ org_form.cso }}
+                                                <div class="form-group mb-3 col-lg-6">
+                                                    <label>Email address:</label>
+                                                    {{ contact_form.email }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-6">
+                                                    <label>Landline:</label>
+                                                    {{ contact_form.landline }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-6">
+                                                    <label>Fax:</label>
+                                                    {{ contact_form.fax }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-6">
+                                                    <label>Cellphone <small class="text-danger">*</small></label>
+                                                    {{ contact_form.cellphone }}
+                                                </div>
+                                                <div class="d-flex justify-content-end">
+                                                    <button class="btn btn-sm btn-danger" type="submit"><i class="far fa-save"></i> Save</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white">Contact Person</div>
+                                    <div class="card-body">
+                                         <form id="csoContactPersonForm" method="POST" action="{% url 'cso-update-page' %}?action=contactpersondetails&cso_id={{cso.id}}">
+                                            <div class="row">
+                                                {% csrf_token %}
+                                                {{ contact_person_form.cso }}
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>First name <small class="text-danger">*</small></label>
+                                                    {{ contact_person_form.first_name }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>Middle name:</label>
+                                                    {{ contact_person_form.middle_name }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>Last name <small class="text-danger">*</small></label>
+                                                    {{ contact_person_form.last_name }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>Extension:</label>
+                                                    {{ contact_person_form.extension }}
+                                                </div>
+                                                <div class="form-group mb-3 col-lg-4">
+                                                    <label>Designation <small class="text-danger">*</small></label>
+                                                    {{ contact_person_form.designation }}
+                                                </div>
+                                                <div class="d-flex justify-content-end">
+                                                    <button class="btn btn-sm btn-danger" type="submit"><i class="far fa-save"></i> Save</button>
+                                                </div>
+                                            </div>
+                                         </form>
+                                    </div>
+                                </div>
+                                {% if transaction_form %}
+                                    <div class="card">
+                                        <div class="card-header bg-primary text-white">Organization Accreditation</div>
+                                        <div class="card-body">
+                                            <form id="csoTransactionForm" method="POST" action="{% url 'cso-update-page' %}?action=accreditation&cso_id={{cso.id}}">
+                                                <div class="row">
+                                                    {% csrf_token %}
+                                                    {{ transaction_form.cso }}
+                                                    {{ transaction_form.transaction }}
+                                                    <div class="form-group mb-3 col-lg-3">
+                                                        <label>Control no <small class="text-danger">*</small></label>
+                                                        {{ transaction_form.control_no }}
+                                                    </div>
+                                                    <div class="form-group mb-3 col-lg-3">
+                                                        <label>Date Issued <small class="text-danger">*</small></label>
+                                                        {{ transaction_form.date_issued }}
+                                                    </div>
+                                                    <div class="form-group mb-3 col-lg-3">
+                                                        <label>Date Expired <small class="text-danger">*</small></label>
+                                                        {{ transaction_form.date_expired }}
+                                                    </div>
+                                                    <div class="form-group mb-3 col-lg-3">
+                                                        <label>Date Issued <small class="text-danger">*</small></label>
+                                                        {{ transaction_form.status }}
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex justify-content-end">
+                                                    <button class="btn btn-sm btn-danger" type="submit"><i class="far fa-save"></i> Save</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                   </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                     </div>
+                  </div>
+                  <div id="generate-modal">
+
+                  </div>
+               </div>
+               <!-- container-fluid -->
+            </div>
+            <!-- End Page-content -->
+            <footer class="footer">
+               <div class="container-fluid">
+                  <div class="row">
+                     <div class="col-sm-6">
+                        <script>
+                           document.write(new Date().getFullYear())
+                        </script> © DSWD BOIS.
+                     </div>
+                  </div>
+               </div>
+            </footer>
+         </div>
+         <!-- end main content-->
+      </div>
+      <!-- END layout-wrapper -->
+      <!-- JAVASCRIPT -->
+      <script src="{% static 'assets/libs/jquery/jquery.min.js' %}"></script>
+      <script src="{% static 'assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+      <script src="{% static 'assets/libs/metismenu/metisMenu.min.js' %}"></script>
+      <script src="{% static 'assets/libs/simplebar/simplebar.min.js' %}"></script>
+      <script src="{% static 'assets/libs/node-waves/waves.min.js' %}"></script>
+      <script src="{% static 'assets/libs/waypoints/lib/jquery.waypoints.min.js' %}"></script>
+      <script src="{% static 'assets/libs/jquery.counterup/jquery.counterup.min.js' %}"></script>
+      <!-- App js -->
+      <script src="{% static 'home/assets/js/sweetalert.js' %}"></script>
+      <script src="{% static 'assets/libs/select2/js/select2.min.js' %}"></script>
+      <script src="{% static 'assets/js/app.js' %}"></script>
+      <script src="{% static 'assets/custom/cso.js' %}" type="module"></script>
+      <script src="{% static 'assets/libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+      <script src="{% static 'assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+   </body>
+</html>

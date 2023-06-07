@@ -1,0 +1,184 @@
+{% load tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SB-FORM-003-A</title>
+    <style>
+        @media print{
+            html,
+            body{
+                font-size: 11pt;
+                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                  
+            }
+            .page-break {
+                page-break-before: always;
+                border-collapse: collapse;
+            }
+            .btn{
+                display: none;
+            }
+        }
+        @page {
+            size: Legal landscape;
+            margin-top: 1cm !important;
+            text-align: center;
+            border: 1px solid black;
+        }
+
+        .header {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .form {
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        table,
+        td,
+        th {
+            border: 1px solid black;
+            word-wrap: break-word;
+            text-align: center;
+            height: 80px; width: 80px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            
+        }
+
+        tbody {
+            page-break-inside: auto;
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+
+
+    </style>
+</head>
+<body>
+    <page>
+        <div class="content">
+            <p class="form">SB-FORM-003-A</p>
+            <br>
+            <div class="header">
+                <label>SOCIAL WELFARE AND DEVELOPMENT AGENCIES (SWDA) ASSESSED FOR LICENSING</label>
+                <br>
+                <label><b> {{quarter}} Quarter {{year}}</b></label>
+                <br>
+                <label>FIELD OFFICE: <label class="text-underline">CARAGA</label></label>
+            </div>
+            <!--
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-primary p-1" onclick="addRow()"><i class="fa fa-plus"></i> Add Row</button>
+                &nbsp;
+                <button type="button" class="btn btn-danger p-1" onclick="deleteRow()"><i class="fa fa-minus"></i> Delete Row</button>
+            </div>
+            <br>
+            -->
+            <div {% if action == "load" %} class="table-responsive" {% endif %}>
+                <table id="myTable">
+                    <tr>
+                        <th rowspan="2">Name and Address of Agency</th>
+                        <th rowspan="2">Area of Coverage of Operation</th>
+                        <th rowspan="2">Nature of SWDA</th>
+                        <th rowspan="2">Category of SWDA</th>
+                        <th rowspan="2">Service Delivery Mode</th>
+                        <th colspan="5">FO PROCESS</th>
+                        <th rowspan="2">No. of Days Acted Upon</th>
+                    </tr>
+                    <tr>
+                        <th>Date of Commplete Documents Received</th>
+                        <th>Date of Angency / Visited Assessed</th>
+                        <th>Issued</th>
+                        <th>Not Issued</th>
+                        <th>Date of Confirmation Transmitted to NGO</th>
+                    </tr>
+                    <tbody contenteditable="true">
+                    {% for row in data %}
+                        <tr>
+                            <td>{{row.name}}, {{row.get_address}}</td>
+                            <td>{% get_basic_details_by_name 'Areas of Operation' row.org_type_id row.id %}</td>
+                            <td></td>
+                            <td></td>
+                            <td>{{row.get_org_service.service_delivery_mode.name}}</td>
+                            <td>{{row.get_org_transaction_license.transaction.date_complete_docs}}</td>
+                            <td>{{row.get_org_transaction_license.transaction.date_assessed}}</td>
+                            <td>{% if row.get_org_transaction_license.transaction.get_license %} ✓ {% endif %}</td>
+                            <td>{% if not row.get_org_transaction_license.transaction.get_license %} ✓ {% endif %}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <br>
+                <div class="bottom">
+                    <div style="float: left; width: 33%;">
+                    <p>Prepared By:</p>
+                    <br>
+                    <label contenteditable="true"><b>ARCHIE D TURTUR, PDO-III</b></label>
+                    <p contenteditable="true">STANDARDS SECTION HEAD</p>
+                    </div>
+                    <div style="float: left; width: 33%;">
+                    <p>Noted By:</p>
+                    <br>
+                    <label contenteditable="true"><b>ALDIE MAE A. ANDOY, SWO IV</b></label>
+                    <p contenteditable="true">OIC-CHIEF, PPD</p>
+                    </div>
+                    <div style="float: left; width: 33%;">
+                    <p>Approved By:</p>
+                    <br>
+                    <label contenteditable="true"><b>RAMEL F. JAMEN</b></label>
+                    <p contenteditable="true">OIC- REGIONAL DIRECTOR</p>
+                    </div>
+                  </div>
+            </div>
+        </div>
+        <script>
+        function addRow() {
+          let table = document.getElementById("myTable");
+          let tableRowCount = CountRows();
+
+          var row = table.insertRow(tableRowCount);
+          for(let i=0; i <= 10; i++){
+            row.insertCell(i).innerHTML = ``;
+          }
+        }
+
+        function deleteRow(){
+            let totalRowCount = CountRows();
+            if(totalRowCount > 2){
+                document.getElementById("myTable").deleteRow(totalRowCount-1);
+            }
+        }
+
+        function CountRows() {
+            let totalRowCount = 0;
+            let rowCount = 0;
+            let table = document.getElementById("myTable");
+            let rows = table.getElementsByTagName("tr")
+            console.log(rows)
+            for (let i = 0; i < rows.length; i++) {
+                totalRowCount++;
+                if (rows[i].getElementsByTagName("td").length > 0) {
+                    rowCount++;
+                }
+            }
+            return totalRowCount
+        }
+        </script>
+
+    </page>
+</body>
+</html>

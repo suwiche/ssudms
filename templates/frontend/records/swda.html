@@ -1,0 +1,52 @@
+{% load tags %}
+{% if acronym == 'swda' %}
+<script>
+   $('table.swda_datatable').DataTable();
+   $('#swda_datatable tbody').on('click', 'tr', function() {
+     const table = $('#swda_datatable').DataTable();
+     let data = table.row(this).data();
+     $('#viewRecordModal').modal('show');
+     $('#viewRecordModalContent').empty();
+     $('#viewRecordModalContent').load(`/dashboard/view_record/swda/view/${data[0]}`);
+   });
+
+   $("#viewRecordModal").on("hide.bs.modal", function (e) {
+        $("#province").select2("destroy");
+        $("#citymun").select2("destroy");
+        $("#barangay").select2("destroy");
+   });
+</script>
+<div class="table-responsive">
+   <table class="table-bordered table-sm swda_datatable" style="width:100%" id="swda_datatable">
+      <thead>
+         <tr class="text-center">
+            <th class="text-wrap" style="width:1rem;">No.</th>
+            <th class="text-wrap" style="width:4rem;">Name</th>
+            <th class="text-wrap" style="width:4rem;">Address</th>
+            <th class="text-wrap" style="width:6rem;">Registration # / Date Issued / Date Expired</th>
+            <th class="text-wrap" style="width:6rem;">License # / Date Issued / Date Expired</th>
+            <th class="text-wrap" style="width:6rem;">Accreditation # / Date Issued / Date Expired</th>
+            <th class="text-wrap" style="width:4rem;">Services</th>
+            <th class="text-wrap" style="width:4rem;">Service Delivery Mode</th>
+            <th class="text-wrap" style="width:4rem;">Agency Type</th>
+         </tr>
+      </thead>
+      <tbody>
+         {% for row in data %}
+         <tr class="text-center">
+            <td>{{row.id}}</td>
+            <td>{{row.name}}</td>
+            <td>{{row.get_address}}</td>
+            <td class="bg-{{row.get_org_transaction_registration.transaction.get_color}}">{% if row.get_org_transaction_registration and row.get_org_transaction_registration.transaction.get_license %} {{row.get_org_transaction_registration.transaction.get_license.number}} / {{row.get_org_transaction_registration.transaction.get_license.date_issued}} / {{row.get_org_transaction_registration.transaction.get_license.date_expired}} {% endif %}</td>
+            <td class="bg-{{row.get_org_transaction_license.transaction.get_color}}">{% if row.get_org_transaction_license and row.get_org_transaction_license.transaction.get_license %} {{row.get_org_transaction_license.transaction.get_license.number}} / {{row.get_org_transaction_license.transaction.get_license.date_issued}} / {{row.get_org_transaction_license.transaction.get_license.date_expired}} {% endif %}</td>
+            <td class="bg-{{row.get_org_transaction_accreditation.transaction.get_color}}">{% if row.get_org_transaction_accreditation and row.get_org_transaction_accreditation.transaction.get_license %} {{row.get_org_transaction_accreditation.transaction.get_license.number}} / {{row.get_org_transaction_accreditation.transaction.get_license.date_issued}} / {{row.get_org_transaction_accreditation.transaction.get_license.date_expired}} {% endif %}</td>
+            <td>{{row.get_org_service.service.name}}</td>
+            <td>{{row.get_org_service.service_delivery_mode.name}}</td>
+            <td>{{row.agency_type.name}}</td>
+         </tr>
+         {% endfor %}
+      </tbody>
+   </table>
+</div>
+{% elif action == 'swda_view' %}
+{% endif %}

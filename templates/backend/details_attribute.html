@@ -1,0 +1,102 @@
+{% extends 'frontend/header.html' %}
+{% load tags %}
+
+{% block body %}
+{% if action == 'details_attribute' %}
+<div class="col-sm-12">
+	<div class="card">
+		<div class="card-body">
+			<div class="d-flex justify-content-end mb-3"><button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#addDetailsAttributeModal">Add Details Attribute</button></div>
+			<div class="table-responsive p-1">
+				<table class="table table-hover table-sm datatable">
+					<thead>
+					<tr class="text-center">
+						<th>No.</th>
+						<th>Name</th>
+						<th>Input Type</th>
+						<th>Width</th>
+						<th>Order</th>
+						<th>Type</th>
+						<th>Is Required</th>
+						<th>Status</th>
+						<th>Actions</th>
+					</tr>
+					</thead>
+					<tbody>
+					{% for row in data %}
+					<tr>
+						<td class="text-center">{{row.id}}</td>
+						<td class="text-center">{{row.name}}</td>
+						<td class="text-center">{{row.input_type}}</td>
+						<td class="text-center">{{row.width}}</td>
+						<td class="text-center">{{row.order}}</td>
+						<td class="text-center">{{row.type.name}}</td>
+						{% get_status_icon row.is_required %}
+						{% get_status_icon row.status %}
+						<td>
+							<div class="d-flex justify-content-center">
+								<a href="{% url 'backend-details-attribute-page' action='update' pk=row.id %}" class="text-decoration-none text-danger"><i class="fa fa-edit f-18"></i></a>
+							</div>
+						</td>
+					</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% elif action == 'update_details_attribute' %}
+<div class="col-sm-12">
+	<div class="card">
+		<form id="updateDetailsAttributeForm" class="updateForm" method="POST" action="{% url 'backend-details-attribute-page' action='update' pk=data.id %}">
+			<div class="card-body">
+				{% csrf_token %}
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label">Type <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-9">
+						{{form.type}}
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label">Name <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-9">
+						{{form.name}}
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label">Input Type <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-9">
+						{{form.input_type}}
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label">Width <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-3">
+						{{form.width}}
+					</div>
+					<label class="col-sm-3 col-form-label">Order <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-3">
+						{{form.order}}
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-sm-3 col-form-label">Is Required <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-3">
+						{{form.is_required}}
+					</div>
+					<label class="col-sm-3 col-form-label">Status <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-3">
+						{{form.status}}
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a href="{% url 'backend-details-attribute-page' %}" class="btn btn-secondary">Back</a>
+				<button class="btn btn-primary" type="submit">Update</button>
+			</div>
+		</form>
+	</div>
+</div>
+{% endif %}
+{% endblock %}

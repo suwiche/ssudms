@@ -1,0 +1,915 @@
+{% load static %}
+{% load tags %}
+{% if type == "out" %}
+<link href="https://fonts.googleapis.com/css?family=Rubik:400,400i,500,500i,700,700i&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static '/assets/css/font-awesome.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/assets/css/vendors/bootstrap.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/assets/css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static '/assets/css/color-1.css' %}">
+<!-- Responsive css-->
+<link rel="stylesheet" type="text/css" href="{% static '/assets/css/responsive.css' %}">
+{% endif %}
+<div>
+  <div class="d-flex justify-content-end mb-3 chart-filter-select">
+    <div class="form-group">
+         {% get_datetime as datetime %}
+         {% get_years as years %}
+      <select class="form-control id_chart_filter_select">
+         <option></option>
+         {% for row in years %}
+         {% if datetime.year == row %}
+         <option value="{{row}}" selected>{{row}}</option>
+         {% else %}
+         <option value="{{row}}">{{row}}</option>
+         {% endif %}
+         {% endfor %}
+      </select>
+    </div>
+  </div>
+</div>
+<div class="row charts">
+  <div class="col-sm-12 col-xl-6 box-col-6">
+    <div class="wow pulse">
+      <div class="cuba-demo-content">
+        <div class="couting">
+            <div class="card">
+              <div class="card-header">
+                <h5>Civil Society Organization </h5>
+              </div>
+              <div class="card-body">
+                <div id="cso-chart"></div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-xl-6 box-col-6">
+    <div class="wow pulse">
+      <div class="cuba-demo-content">
+        <div class="couting">
+            <div class="card">
+              <div class="card-header">
+                <h5>Child Development Center</h5>
+              </div>
+              <div class="card-body">
+                <div id="cdc-chart"></div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-xl-6 box-col-6">
+    <div class="wow pulse">
+      <div class="cuba-demo-content">
+        <div class="couting">
+            <div class="card">
+              <div class="card-header">
+                <h5>Child Development Worker</h5>
+              </div>
+              <div class="card-body">
+                <div id="cdw-chart"></div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-xl-6 box-col-6">
+    <div class="wow pulse">
+      <div class="cuba-demo-content">
+        <div class="couting">
+            <div class="card">
+              <div class="card-header">
+                <h5>SWDA (Registration)</h5>
+              </div>
+              <div class="card-body">
+                <div id="swda-rchart"></div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-xl-6 box-col-6">
+    <div class="wow pulse">
+      <div class="cuba-demo-content">
+        <div class="couting">
+            <div class="card">
+              <div class="card-header">
+                <h5>SWDA (Licensing)</h5>
+              </div>
+              <div class="card-body">
+                <div id="swda-lchart"></div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-xl-6 box-col-6">
+    <div class="wow pulse">
+      <div class="cuba-demo-content">
+        <div class="couting">
+            <div class="card">
+              <div class="card-header">
+                <h5>SWDA (Accreditation)</h5>
+              </div>
+              <div class="card-body">
+                <div id="swda-achart"></div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-xl-6 box-col-6">
+    <div class="wow pulse">
+      <div class="cuba-demo-content">
+        <div class="couting">
+            <div class="card">
+              <div class="card-header">
+                <h5>Social Welfare Handling Court Cases</h5>
+              </div>
+              <div class="card-body">
+                <div id="swmcc-chart"></div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-xl-6 box-col-6">
+    <div class="wow pulse">
+      <div class="cuba-demo-content">
+        <div class="couting">
+            <div class="card">
+              <div class="card-header">
+                <h5>Pre-Marrage Counselors</h5>
+              </div>
+              <div class="card-body">
+                <div id="pmc-chart"></div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-xl-6 box-col-6">
+    <div class="wow pulse">
+      <div class="cuba-demo-content">
+        <div class="couting">
+            <div class="card">
+              <div class="card-header">
+                <h5>Established Senior Citizen Center For Elderly</h5>
+              </div>
+              <div class="card-body">
+                <div id="scc-chart"></div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12 col-xl-6 box-col-6">
+    <div class="wow pulse">
+      <div class="cuba-demo-content">
+        <div class="couting">
+            <div class="card">
+              <div class="card-header">
+                <h5>Public Solicitation</h5>
+              </div>
+              <div class="card-body">
+                <div id="ps-chart"></div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% if action == "out" %}
+<script src="{% static '/assets/js/chart/apex-chart/apex-chart.js' %}"></script>
+{% endif %}
+{% block script %}
+<script>
+    $(".id_chart_filter_select").select2({
+        placeholder: "Select",
+        width: "resolve",
+        dropdownParent: $(".chart-filter-select"),
+    });
+
+    var cso_options = {
+        chart: {
+            height: 350,
+            type: 'bar',
+            toolbar:{
+              show: false
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '55%',
+            },
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        series: [{
+            name: 'Active',
+            data: [{% for row in data.cso.accreditation.active  %} {{row}}, {% endfor %}]
+        },{
+            name: 'Inactive',
+            data: [{% for row in data.cso.accreditation.inactive %} {{row}}, {% endfor %}]
+        }],
+        xaxis: {
+            categories: ['1st Quarter', '2nd Quarter', '3rd Quarter', '4th Quarter'],
+        },
+        yaxis: {
+            title: {
+                text: `Civil Society Organization (${year})`
+            }
+        },
+        fill: {
+            opacity: 1
+
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val
+                }
+            }
+        },
+        colors:['#28a745', '#dc3545']
+    }
+
+    var cso = new ApexCharts(
+        document.querySelector("#cso-chart"),
+        cso_options
+    );
+
+    cso.render();
+
+    var cdc_options = {
+        chart: {
+            height: 350,
+            type: 'bar',
+            toolbar:{
+              show: false
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '55%',
+            },
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        series: [{
+            name: 'Active',
+            data: [{% for row in data.cdc.accreditation.active  %} {{row}}, {% endfor %}]
+        },{
+            name: 'Inactive',
+            data: [{% for row in data.cdc.accreditation.inactive %} {{row}}, {% endfor %}]
+        }],
+        xaxis: {
+            categories: ['1st Quarter', '2nd Quarter', '3rd Quarter', '4th Quarter'],
+        },
+        yaxis: {
+            title: {
+                text: `Child Development Center (${year})`
+            }
+        },
+        fill: {
+            opacity: 1
+
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val
+                }
+            }
+        },
+        colors:['#28a745', '#dc3545']
+    }
+
+    var cdc = new ApexCharts(
+        document.querySelector("#cdc-chart"),
+        cdc_options
+    );
+
+    cdc.render();
+
+    var cdw_options = {
+        chart: {
+            height: 350,
+            type: 'bar',
+            toolbar:{
+              show: false
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '55%',
+            },
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        series: [{
+            name: 'Active',
+            data: [{% for row in data.cdw.accreditation.active  %} {{row}}, {% endfor %}]
+        },{
+            name: 'Inactive',
+            data: [{% for row in data.cdw.accreditation.inactive %} {{row}}, {% endfor %}]
+        }],
+        xaxis: {
+            categories: ['1st Quarter', '2nd Quarter', '3rd Quarter', '4th Quarter'],
+        },
+        yaxis: {
+            title: {
+                text: `Child Development Worker (${year})`
+            }
+        },
+        fill: {
+            opacity: 1
+
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val
+                }
+            }
+        },
+        colors:['#28a745', '#dc3545']
+    }
+
+    var cdw = new ApexCharts(
+        document.querySelector("#cdw-chart"),
+        cdw_options
+    );
+
+    cdw.render();
+
+    var swda_roptions = {
+        chart: {
+            height: 350,
+            type: 'bar',
+            toolbar:{
+              show: false
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '55%',
+            },
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        series: [{
+            name: 'Active',
+            data: [{% for row in data.swda.registration.active  %} {{row}}, {% endfor %}]
+        },{
+            name: 'Inactive',
+            data: [{% for row in data.swda.registration.inactive %} {{row}}, {% endfor %}]
+        }],
+        xaxis: {
+            categories: ['1st Quarter', '2nd Quarter', '3rd Quarter', '4th Quarter'],
+        },
+        yaxis: {
+            title: {
+                text: `Social Welfare and Development Agencies (Registration ${year})`
+            }
+        },
+        fill: {
+            opacity: 1
+
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val
+                }
+            }
+        },
+        colors:['#28a745', '#dc3545']
+    }
+
+    var swda_r = new ApexCharts(
+        document.querySelector("#swda-rchart"),
+        swda_roptions
+    );
+
+    swda_r.render();
+
+    var swda_loptions = {
+        chart: {
+            height: 350,
+            type: 'bar',
+            toolbar:{
+              show: false
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '55%',
+            },
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        series: [{
+            name: 'Active',
+            data: [{% for row in data.swda.licensing.active  %} {{row}}, {% endfor %}]
+        },{
+            name: 'Inactive',
+            data: [{% for row in data.swda.licensing.inactive %} {{row}}, {% endfor %}]
+        }],
+        xaxis: {
+            categories: ['1st Quarter', '2nd Quarter', '3rd Quarter', '4th Quarter'],
+        },
+        yaxis: {
+            title: {
+                text: `Social Welfare and Development Agencies (Licensing ${year})`
+            }
+        },
+        fill: {
+            opacity: 1
+
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val
+                }
+            }
+        },
+        colors:['#28a745', '#dc3545']
+    }
+
+    var swda_l = new ApexCharts(
+        document.querySelector("#swda-lchart"),
+        swda_loptions
+    );
+
+    swda_l.render();
+
+    var swda_aoptions = {
+        chart: {
+            height: 350,
+            type: 'bar',
+            toolbar:{
+              show: false
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '55%',
+            },
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        series: [{
+            name: 'Active',
+            data: [{% for row in data.swda.accreditation.active  %} {{row}}, {% endfor %}]
+        },{
+            name: 'Inactive',
+            data: [{% for row in data.swda.accreditation.inactive %} {{row}}, {% endfor %}]
+        }],
+        xaxis: {
+            categories: ['1st Quarter', '2nd Quarter', '3rd Quarter', '4th Quarter'],
+        },
+        yaxis: {
+            title: {
+                text: `Social Welfare and Development Agencies (Accreditation ${year})`
+            }
+        },
+        fill: {
+            opacity: 1
+
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val
+                }
+            }
+        },
+        colors:['#28a745', '#dc3545']
+    }
+
+    var swda_a = new ApexCharts(
+        document.querySelector("#swda-achart"),
+        swda_aoptions
+    );
+
+    swda_a.render();
+
+    var swmcc_options = {
+        chart: {
+            height: 350,
+            type: 'bar',
+            toolbar:{
+              show: false
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '55%',
+            },
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        series: [{
+            name: 'Active',
+            data: [{% for row in data.swmcc.accreditation.active  %} {{row}}, {% endfor %}]
+        },{
+            name: 'Inactive',
+            data: [{% for row in data.swmcc.accreditation.inactive %} {{row}}, {% endfor %}]
+        }],
+        xaxis: {
+            categories: ['1st Quarter', '2nd Quarter', '3rd Quarter', '4th Quarter'],
+        },
+        yaxis: {
+            title: {
+                text: `SWMCC (Accreditation ${year})`
+            }
+        },
+        fill: {
+            opacity: 1
+
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val
+                }
+            }
+        },
+        colors:['#28a745', '#dc3545']
+    }
+
+    var swmcc = new ApexCharts(
+        document.querySelector("#swmcc-chart"),
+        swmcc_options
+    );
+
+    swmcc.render();
+
+    var pmc_options = {
+        chart: {
+            height: 350,
+            type: 'bar',
+            toolbar:{
+              show: false
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '55%',
+            },
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        series: [{
+            name: 'Active',
+            data: [{% for row in data.pmc.accreditation.active  %} {{row}}, {% endfor %}]
+        },{
+            name: 'Inactive',
+            data: [{% for row in data.pmc.accreditation.inactive %} {{row}}, {% endfor %}]
+        }],
+        xaxis: {
+            categories: ['1st Quarter', '2nd Quarter', '3rd Quarter', '4th Quarter'],
+        },
+        yaxis: {
+            title: {
+                text: `PMC (Accreditation ${year})`
+            }
+        },
+        fill: {
+            opacity: 1
+
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val
+                }
+            }
+        },
+        colors:['#28a745', '#dc3545']
+    }
+
+    var pmc = new ApexCharts(
+        document.querySelector("#pmc-chart"),
+        pmc_options
+    );
+
+    pmc.render();
+
+    var scc_options = {
+        chart: {
+            height: 350,
+            type: 'bar',
+            toolbar:{
+              show: false
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '55%',
+            },
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        series: [{
+            name: 'Active',
+            data: [{% for row in data.scc.accreditation.active  %} {{row}}, {% endfor %}]
+        },{
+            name: 'Inactive',
+            data: [{% for row in data.scc.accreditation.inactive %} {{row}}, {% endfor %}]
+        }],
+        xaxis: {
+            categories: ['1st Quarter', '2nd Quarter', '3rd Quarter', '4th Quarter'],
+        },
+        yaxis: {
+            title: {
+                text: `SCC (Accreditation ${year})`
+            }
+        },
+        fill: {
+            opacity: 1
+
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val
+                }
+            }
+        },
+        colors:['#28a745', '#dc3545']
+    }
+
+    var scc = new ApexCharts(
+        document.querySelector("#scc-chart"),
+        scc_options
+    );
+
+    scc.render();
+
+    var ps_options = {
+        chart: {
+            height: 350,
+            type: 'bar',
+            toolbar:{
+              show: false
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '55%',
+            },
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        series: [{
+            name: 'Active',
+            data: [{% for row in data.ps.accreditation.active  %} {{row}}, {% endfor %}]
+        },{
+            name: 'Inactive',
+            data: [{% for row in data.ps.accreditation.inactive %} {{row}}, {% endfor %}]
+        }],
+        xaxis: {
+            categories: ['1st Quarter', '2nd Quarter', '3rd Quarter', '4th Quarter'],
+        },
+        yaxis: {
+            title: {
+                text: `PS (Accreditation ${year})`
+            }
+        },
+        fill: {
+            opacity: 1
+
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return val
+                }
+            }
+        },
+        colors:['#28a745', '#dc3545']
+    }
+
+    var ps = new ApexCharts(
+        document.querySelector("#ps-chart"),
+        ps_options
+    );
+
+    ps.render();
+
+    $(".id_chart_filter_select").on('change', () => {
+        y = $(".id_chart_filter_select").val();
+        $.ajax({
+             url: `/dashboard/update_charts/in/filter/${y}`,
+             type: "GET",
+             success: function(result) {
+                const d_cso = result.data.cso.accreditation;
+                const d_cdc = result.data.cdc.accreditation;
+                const d_cdw = result.data.cdw.accreditation;
+                const d_swda_r = result.data.swda.registration;
+                const d_swda_l = result.data.swda.licensing;
+                const d_swda_a = result.data.swda.accreditation;
+                const d_swmcc = result.data.swmcc.accreditation;;
+                const d_pmc = result.data.pmc.accreditation;
+                const d_scc = result.data.scc.accreditation;
+                const d_ps = result.data.ps.accreditation;
+
+                cso.updateSeries([
+                 {
+                      name: 'Active',
+                      data: d_cso.active
+                 },
+                 {
+                      name: 'Inactive',
+                      data: d_cso.inactive
+                 }
+                 ]);
+
+                 cdc.updateSeries([
+                 {
+                      name: 'Active',
+                      data: d_cdc.active
+                 },
+                 {
+                      name: 'Inactive',
+                      data: d_cdc.inactive
+                 }
+                 ]);
+
+                 cdw.updateSeries([
+                 {
+                      name: 'Active',
+                      data: d_cdw.active
+                 },
+                 {
+                      name: 'Inactive',
+                      data: d_cdw.inactive
+                 }
+                 ]);
+
+                 swda_r.updateSeries([
+                 {
+                      name: 'Active',
+                      data: d_swda_r.active
+                 },
+                 {
+                      name: 'Inactive',
+                      data: d_swda_r.inactive
+                 }
+                 ]);
+
+                 swda_l.updateSeries([
+                 {
+                      name: 'Active',
+                      data: d_swda_l.active
+                 },
+                 {
+                      name: 'Inactive',
+                      data: d_swda_l.inactive
+                 }
+                 ]);
+
+                 swda_a.updateSeries([
+                 {
+                      name: 'Active',
+                      data: d_swda_a.active
+                 },
+                 {
+                      name: 'Inactive',
+                      data: d_swda_a.inactive
+                 }
+                 ]);
+
+                 swmcc.updateSeries([
+                 {
+                      name: 'Active',
+                      data: d_swmcc.active
+                 },
+                 {
+                      name: 'Inactive',
+                      data: d_swmcc.inactive
+                 }
+                 ]);
+
+                 pmc.updateSeries([
+                 {
+                      name: 'Active',
+                      data: d_pmc.active
+                 },
+                 {
+                      name: 'Inactive',
+                      data: d_pmc.inactive
+                 }
+                 ]);
+
+                 scc.updateSeries([
+                 {
+                      name: 'Active',
+                      data: d_scc.active
+                 },
+                 {
+                      name: 'Inactive',
+                      data: d_scc.inactive
+                 }
+                 ]);
+
+                 ps.updateSeries([
+                 {
+                      name: 'Active',
+                      data: d_ps.active
+                 },
+                 {
+                      name: 'Inactive',
+                      data: d_ps.inactive
+                 }
+                 ]);
+
+             },
+         });
+    });
+</script>
+{% endblock %}

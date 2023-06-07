@@ -1,0 +1,850 @@
+{% load tags %}
+{% load static %}
+{% if action == "users" %}
+<div class="modal fade" id="addUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Add User</h5>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <form class="theme-form addForm" id="addUserForm" method="POST" action="{% url 'backend-users-page' %}">
+            <div class="modal-body">
+               {% csrf_token %}
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Username <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.username}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">First name <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.first_name}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Last name <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.last_name}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Email <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.email}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Password <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.password1}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Confirm Password <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.password2}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Group <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.group}}
+                  </div>
+               </div>
+               <div class="row mb-1">
+                  <label class="col-sm-3 col-form-label pb-0"></label>
+                  <div class="col-sm-9">
+                     <div class="mb-0">
+                        <div class="m-checkbox-inline">
+                           {{form.is_active}}
+                           <label class="form-check-label">Active</label>
+                           {{form.is_superuser}}
+                           <label class="form-check-label">Superuser</label>
+                           {{form.is_staff}}
+                           <label class="form-check-label">Staff</label>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="mt-2">
+                  <ul class="errors">
+                  </ul>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+               <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+{% elif action == "extensions" %}
+<div class="modal fade" id="addExtensionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Add Extension</h5>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <form id="addExtensionForm" class="addForm" method="POST" action="{% url 'backend-extensions-page' %}">
+            <div class="modal-body">
+               {% csrf_token %}
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Name <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.name}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Status <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.status}}
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+               <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+{% elif action == 'process' %}
+<div class="modal fade" id="addProcessModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Add Process</h5>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div><div class="generate-form">
+    <div class="modal-body">
+        <ul class="nav nav-tabs" id="icon-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="basic-details-tab" data-bs-toggle="tab" href="#basic-details" role="tab" aria-selected="true">
+                    <i class="fa fa-th-list"></i>
+                    Basic Information
+                </a>
+            </li>
+        </ul>
+        <div class="card">
+                      <div class="card-body">
+                        <form class="theme-form">
+                          <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label" >Title</label>
+                            <div class="col-sm-9">
+                              <input class="form-control" id="title-kp" type="text" placeholder="Title of Knowledge Product">
+                            </div>
+                          </div>
+                          <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Type</label>
+                              <div class="col-sm-9">
+                                <select name="type-kp" class="form-control">
+                                    <option value=" "></option>
+                                    {% for row in type %}
+                                    <option value="{{row.id}}">{{row.name}}</option>
+                                    {% endfor %}
+                                </select>
+                              </div>
+                          </div>
+                          <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Author</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" id="author" type="text" placeholder="Author / Proponent of the Knowledge Product">
+                            </div>
+                          </div>
+                          <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Position</label>
+                            <div class="col-sm-9">
+                              <input class="form-control" name="position" type="text" placeholder="Position">
+                            </div>
+                          </div>
+                          <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label" >Division</label>
+                              <div class="col-sm-9">
+                                <select class="form-control">
+                                    <option value="AL"> Pantawid Pamilyang Pilipino Program</option>
+                                    <option value="AL"> Policy and Plans Division</option>
+                                    <option value="AL"> Human Resource Management Development Division</option>
+                                    <option value="AL"> Protective Services Division</option>
+                                    <option value="AL"> Finance Management Division</option>
+                                    <option value="AL"> Promotive Services Division</option>
+                                    <option value="AL"> Admin Division</option>
+                                    <option value="AL"> Office of the Regional Director</option>
+                                    <option value="AL"> Disaster Risk & Management Division</option>
+                                </select>
+                              </div>
+                          </div>
+                          <div class="mb-3 row">
+                            <label class="col-sm-3 col-form-label">Section</label>
+                              <div class="col-sm-9">
+                                <input class="form-control" name="section" type="text" placeholder="Section">
+                              </div>
+                          </div>
+                          <fieldset class="mb-3">
+                            <div class="row">
+                              <label class="col-form-label col-sm-3 pt-0">Attachment</label>
+                              <div class="col-sm-9">
+                                <input type="file">
+                              </div>
+                            </div>
+                          </fieldset>
+                        </form>
+                      </div>
+                      <div class="card-footer text-end">
+                        <button class="btn btn-primary">Submit</button>
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+    </div>
+</div>
+         <form id="addProcessForm" class="addForm" method="POST" action="{% url 'backend-process-page' %}">
+            <div class="modal-body">
+               {% csrf_token %}
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Name <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.name}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Status <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.status}}
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+               <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+{% elif action == "types" %}
+<div class="modal fade" id="addTypeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Add Type</h5>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <form id="addTypeForm" class="addForm" method="POST" action="{% url 'backend-types-page' %}">
+            <div class="modal-body">
+               {% csrf_token %}
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Name <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.name}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Acronym <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-3">
+                     {{form.acronym}}
+                  </div>
+                  <label class="col-sm-3 col-form-label">Status <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-3">
+                     {{form.status}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Is Worker?</label>
+                  <div class="col-sm-3">
+                     {{form.is_worker}}
+                  </div>
+                  <label class="col-sm-3 col-form-label">Has Worker/s?</label>
+                  <div class="col-sm-3">
+                     {{form.has_worker}}
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+               <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+{% elif action == 'services' %}
+<div class="modal fade" id="addServicesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Add Services</h5>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <form id="addServicesForm" class="addForm" method="POST" action="{% url 'backend-services-page' %}">
+            <div class="modal-body">
+               {% csrf_token %}
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Name <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.name}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Status <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.status}}
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+               <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+{% elif action == 'status' %}
+<div class="modal fade" id="addStatusModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Add Status</h5>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <form id="addStatusForm" class="addForm" method="POST" action="{% url 'backend-status-page' %}">
+            <div class="modal-body">
+               {% csrf_token %}
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Name <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.name}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Status <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.status}}
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+               <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+{% elif action == 'level' %}
+<div class="modal fade" id="addLevelModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Add Level</h5>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <form id="addLevelForm" class="addForm" method="POST" action="{% url 'backend-level-page' %}">
+            <div class="modal-body">
+               {% csrf_token %}
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Name <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.name}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Status <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.status}}
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+               <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+{% elif action == 'form' %}
+<div class="modal fade" id="addFormModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Add Form</h5>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <form id="addFormForm" class="addForm" method="POST" action="{% url 'frontend-forms' %}">
+            <div class="modal-body">
+               {% csrf_token %}
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Name <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.name}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Status <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.status}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Org <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.org_type}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+					<label class="col-sm-3 col-form-label">Orientation <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-9">
+						{{form.orientation}}
+					</div>
+				</div>
+               <div class="mb-3 row">
+					<label class="col-sm-3 col-form-label">Type <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-9">
+						{{form.form_type}}
+					</div>
+				</div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+               <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+{% elif action == 'form_versions' %}
+<div class="modal fade" id="addFormVersionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Add Form Version</h5>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <form id="addFormVersion" class="addForm" method="POST" action="{% url 'frontend-forms-versions' %}">
+            <div class="modal-body">
+               {% csrf_token %}
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Name <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.name}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Form <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.form}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Status <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.status}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Template <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.template}}
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+               <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+{% elif action == 'library_parts' %}
+<div class="modal fade" id="addLibraryPartsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Add Form</h5>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <form id="addLibraryPartsForm" class="addForm" method="POST" action="{% url 'frontend-library-parts-page' %}">
+            <div class="modal-body">
+               {% csrf_token %}
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Name <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.name}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Status <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.status}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Order No <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.order}}
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+               <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+{% elif action == 'form_parts' %}
+<div class="modal fade" id="addFormPartsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Add Form Parts</h5>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <form id="addFormPartsForm" class="addForm" method="POST" action="{% url 'frontend-form-parts-page' %}">
+            <div class="modal-body">
+               {% csrf_token %}
+               <div class="mb-3 row">
+                  <label class="col-sm-2 col-form-label">Content <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-10">
+                     {{form.content}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+					<label class="col-sm-2 col-form-label">Part <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-10">
+						{{form.part}}
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-sm-2 col-form-label">Form <i style="color:#dc3545;">*</i></label>
+					<div class="col-sm-10">
+						{{form.form}}
+					</div>
+				</div>
+               <div class="mb-3 row">
+                  <label class="col-sm-2 col-form-label">Status <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-10">
+                     {{form.status}}
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+               <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+<script>
+   $(function(){
+      CKEDITOR.replace('id_content', {
+         toolbar: 'Basic'
+      })
+   })
+</script>
+
+{% elif action == 'details_attribute' %}
+<div class="modal fade" id="addDetailsAttributeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Add Details Attribute</h5>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <form id="addDetailsAttributeForm" class="addForm" method="POST" action="{% url 'backend-details-attribute-page' %}">
+            <div class="modal-body">
+               {% csrf_token %}
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Type <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.type}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Name <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.name}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Input Type <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.input_type}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Width <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.width}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Order <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.order}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Is Required <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.is_required}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Status <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.status}}
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+               <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+{% elif action == 'worker_attribute' %}
+<div class="modal fade" id="addWorkerAttributeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Add Worker Attribute</h5>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <form id="addWorkerAttributeForm" class="addWorkerAttributeForm" method="POST" action="{% url 'backend-worker-attribute-page' %}">
+            <div class="modal-body">
+               {% csrf_token %}
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Type <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.type}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Name <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.name}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Input Type <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.input_type}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Width <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.width}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Order <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.order}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Is Required <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.is_required}}
+                  </div>
+               </div>
+               <div class="mb-3 row">
+                  <label class="col-sm-3 col-form-label">Status <i style="color:#dc3545;">*</i></label>
+                  <div class="col-sm-9">
+                     {{form.status}}
+                  </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+               <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+{% elif action == 'records' %}
+<div class="modal fade" id="addRecordModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Add Record</h5>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div id="addRecordModalContent">
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="viewRecordModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">View Record</h5>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div id="viewRecordModalContent">
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="updateTransactionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+         <div class="modal-header bg-info">
+            <h5 class="modal-title text-white">Update Transaction</h5>
+            <button class="btn-close text-white" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div id="updateTransactionModalContent">
+
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="addTransactionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+      <div class="modal-content">
+         <div class="modal-header bg-info">
+            <h5 class="modal-title text-white">Add Transaction</h5>
+            <button class="btn-close text-white" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div id="addTransactionModalContent">
+
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="addWorkerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+      <div class="modal-content">
+         <div class="modal-header bg-info">
+            <h5 class="modal-title text-white">Add Worker</h5>
+            <button class="btn-close text-white" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div id="addWorkerModalContent">
+
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="generateReportModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenter" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+      <div class="modal-content">
+         <div class="modal-header generate-report-header">
+            <h5 class="modal-title">Generate Report</h5>
+            <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <div class="row">
+               <div class="col-xl-3 xl-20">
+                  <div class="default-according style-1 faq-accordion job-accordion" id="accordionoc">
+                     <div class="row">
+                        <div class="col-xl-12">
+                           <div class="card">
+                              <div class="card-header">
+                                 <h5 class="mb-0">
+                                    <button class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#collapseicon" aria-expanded="true" aria-controls="collapseicon">Filter</button>
+                                 </h5>
+                              </div>
+                              <div class="collapse show" id="collapseicon" aria-labelledby="collapseicon" data-bs-parent="#accordion">
+                                 <div class="card-body filter-cards-view animate-chk">
+                                    <form class="needs-validation" novalidate="" id="filterReportForm" action="{% url 'frontend-generate-report' %}" method="POST">
+                                       {% csrf_token %}
+                                       <input type="hidden" name="action" value="load">
+                                       <div class="job-filter mb-2">
+                                          <div class="faq-form">
+                                             <select class="form-control" name="form" id="id_forms" required>
+                                                <option></option>
+                                                {% for row in forms %}
+                                                   {% if acronym == row.org_type.acronym %}
+                                                      <option value="{{row.id}}">{{row.name}}</option>
+                                                   {% endif %}
+                                                {% endfor %}
+                                             </select>
+                                             <div class="invalid-feedback text-danger">Please select a form.</div>
+                                          </div>
+                                       </div>
+                                        <div class="job-filter mb-2">
+                                          <div class="faq-form">
+                                             <select class="form-control" name="quarter" id="id_quarters" required>
+                                                <option></option>
+                                                <option value="1">1st</option>
+                                                <option value="2">2nd</option>
+                                                <option value="3">3rd</option>
+                                                <option value="4">4th</option>
+                                             </select>
+                                             <div class="invalid-feedback text-danger">Please select a quarter.</div>
+                                          </div>
+                                       </div>
+                                       <div class="job-filter mb-2">
+                                          <div class="faq-form">
+                                             {% get_datetime as datetime %}
+                                             {% get_years as years %}
+                                             <select class="form-control" name="year" id="id_years" required>
+                                                <option></option>
+                                                {% for row in years %}
+                                                {% if datetime.year == row %}
+                                                <option value="{{row}}" selected>{{row}}</option>
+                                                {% else %}
+                                                <option value="{{row}}">{{row}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                             </select>
+                                             <div class="invalid-feedback text-danger">Please select a year.</div>
+                                          </div>
+                                       </div>
+                                       <button class="btn btn-primary text-center" type="submit">Apply Filters</button>
+                                    </form>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-xl-9 xl-80">
+                  <div class="card" style="background-color:#FFFFFF;">
+                     <div class="card-body pb-0" id="generateReportContent">
+                     </div>
+                     <br>
+                     <div class="card-footer d-flex justify-content-end">
+                        <button class="btn btn-primary p-1" type="btn" onClick="printDiv();"><i class="fa fa-print"></i> Print</button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+{% endif %}

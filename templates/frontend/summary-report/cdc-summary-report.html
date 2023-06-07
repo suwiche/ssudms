@@ -1,0 +1,180 @@
+{% load tags %}
+{% get_provinces as provinces %}
+<div class="content mb-5">
+    <div class="text-center">
+        <label>Summary Report</label>
+        <br>
+        <label><b> (1st-4th Quarter of CY {{year}})</b></label>
+        <br>
+        <label>FIELD OFFICE: <label class="text-underline">CARAGA</label></label>
+    </div>
+    <br>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <tr class="text-center">
+                <th rowspan="2">Province</th>
+                <th rowspan="2" class="text-wrap" style="width:2rem;">Total # of Cities / Municipalities</th>
+                <th rowspan="2" class="text-wrap" style="width:2rem;">Total # of Barangay</th>
+                <th colspan="2" class="bg-success">Far to Expire</th>
+                <th colspan="2" class="bg-warning">Soon to Expire</th>
+                <th colspan="2">Not Yet Visited</th>
+                <th colspan="2">For Re-Assessment / Assessed</th>
+                <th colspan="2" class="bg-danger">Expired</th>
+                <th colspan="3" class="bg-dark">Total</th>
+            </tr>
+            <tr class="text-center">
+                <td class="bg-success">CDC</td>
+                <td class="bg-success">CDW</td>
+                <td class="bg-warning">CDC</td>
+                <td class="bg-warning">CDW</td>
+                <td>CDC</td>
+                <td>CDW</td>
+                <td>CDC</td>
+                <td>CDW</td>
+                <td class="bg-danger">CDC</td>
+                <td class="bg-danger">CDW</td>
+                <th>CDC</th>
+                <th>CDW</th>
+                <th>TOTAL</th>
+            </tr>
+            <tbody>
+            {% for row in provinces %}
+                <tr class="text-center">
+                    <td>{{row.name}}</td>
+                    <td>{{row.get_count_of_cities}}</td>
+                    <td>{% get_total_barangays row.id %}</td>
+                    <td>{% get_cdc_far_to_expire year type.id row.id %}</td>
+                    <td>{% get_cdw_far_to_expire year type.id row.id %}</td>
+                    <td>{% get_cdc_near_to_expire year type.id row.id %}</td>
+                    <td>{% get_cdw_near_to_expire year type.id row.id %}</td>
+                    <td>{% get_cdc_not_yet year type.id row.id %}</td>
+                    <td>{% get_cdw_not_yet year type.id row.id %}</td>
+                    <td>{% get_cdc_for_re_assessment year type.id row.id %}</td>
+                    <td>{% get_cdw_for_re_assessment year type.id row.id %}</td>
+                    <td>{% get_cdc_expired year type.id row.id %}</td>
+                    <td>{% get_cdw_expired year type.id row.id %}</td>
+                    <td>{% get_prov_org_total year type.id row.id %}</td>
+                    <td>{% get_prov_worker_total year type.id row.id %}</td>
+                    <td>{% get_prov_cdccdw_total year type.id row.id %}</th>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="text-center">
+                    <th>TOTAL</th>
+                    <th>{% get_total_cities %}</th>
+                    <th>{% get_total_barangays %}</th>
+                    <th>{% get_cdc_far_to_expire_total year type.id %}</th>
+                    <th>{% get_cdw_far_to_expire_total year type.id %}</th>
+                    <th>{% get_cdc_near_to_expire_total year type.id %}</th>
+                    <th>{% get_cdw_near_to_expire_total year type.id %}</th>
+                    <th>{% get_cdc_not_yet_total year type.id %}</th>
+                    <th>{% get_cdw_not_yet_total year type.id %}</th>
+                    <th>{% get_cdc_for_re_assessment_total year type.id %}</th>
+                    <th>{% get_cdw_for_re_assessment_total year type.id %}</th>
+                    <th>{% get_cdc_expired_total year type.id %}</th>
+                    <th>{% get_cdw_expired_total year type.id %}</th>
+                    <th>{% get_org_total year type.id %}</th>
+                    <th>{% get_worker_total year type.id %}</th>
+                    <th>{% get_cdccdw_total year type.id %}</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered" id="summaryTable2">
+        <thead class="text-center">
+            <tr>
+                <th class="text-wrap text-uppercase" style="width:4rem;">Province</th>
+                <th class="text-wrap text-uppercase" style="width:4rem;">Per Class</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Cities / Municipalities</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Income Class</th>
+                <th class="text-wrap text-uppercase" style="width:4rem;">District</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Name Of Barangay</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Name Of Child Development Centers</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Control No.</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Issued Date</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Expiration Dates</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Level</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Name of Child Development Workers</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Sex</th>
+                <th class="text-wrap text-uppercase" style="width:4rem;">Control No.</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Issued Date</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Expiration Dates</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Level</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Highest Educational Attainment</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Birthdate</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Age</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Status of Appointment</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Date Started</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Years in Service</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Status of Building</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Source</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Assessed by</th>
+                <th class="text-wrap text-uppercase" style="width:2rem;">Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr class="text-center">
+                <td>{{row.get_province}}</td>
+                <td>{% get_address row.barangay.id %}</td>
+                <td>{{row.get_city}}</td>
+                <td>{% get_details_attribute row.id 2 as landline %} {{landline.values}}</td>
+                <td>{% get_details_attribute row.id 3 as fax %} {{fax.values}}</td>
+                <td>{{row.get_barangay}}</td>
+                <td>{{row.name}}</td>
+                <td class="bg-{{row.get_org_transaction_accreditation.transaction.get_color}}">{{row.get_org_transaction_accreditation.transaction.get_license.number}}</td>
+                <td class="bg-{{row.get_org_transaction_accreditation.transaction.get_color}}">{{row.get_org_transaction_accreditation.transaction.get_license.date_issued}}</td>
+                <td class="bg-{{row.get_org_transaction_accreditation.transaction.get_color}}">{{row.get_org_transaction_accreditation.transaction.get_license.date_expired}}</td>
+                <td class="bg-{{row.get_org_transaction_accreditation.transaction.get_color}}">{{row.get_org_transaction_accreditation.transaction.get_license.level.name}}</td>
+                <td>
+                    {% for worker in row.get_workers %}
+                    <label class="text-{{worker.get_worker_transaction_accreditation.transaction.get_color}} text-uppercase"><sup>{{forloop.counter}}</sup>{{worker.get_worker_fullname}} </label>
+                    {% endfor %}
+                </td>
+                <td class="text-wrap text-uppercase" style="width:4rem;">
+                    {% for worker in row.get_workers %}
+                    <label class="text-{{worker.get_worker_transaction_accreditation.transaction.get_color}}">{% if worker.get_sex != '' %}<sup>{{forloop.counter}}</sup>{{worker.get_sex}} {% endif %}</label>
+                    {% endfor %}
+                </td>
+                <td class="text-wrap text-uppercase" style="width:4rem;">
+                    {% for worker in row.get_workers %}
+                    <label class="text-{{worker.get_worker_transaction_accreditation.transaction.get_color}}"><sup>{{forloop.counter}}</sup>{{worker.get_worker_transaction_accreditation.transaction.get_license.number}} </label>
+                    {% endfor %}
+                </td>
+                <td class="text-wrap text-uppercase" style="width:4rem;">
+                    {% for worker in row.get_workers %}
+                    <label class="text-{{worker.get_worker_transaction_accreditation.transaction.get_color}}"><sup>{{forloop.counter}}</sup>{{worker.get_worker_transaction_accreditation.transaction.get_license.date_issued}} </label>
+                    {% endfor %}
+                </td>
+                <td class="text-wrap text-uppercase" style="width:4rem;">
+                    {% for worker in row.get_workers %}
+                    <label class="text-{{worker.get_worker_transaction_accreditation.transaction.get_color}}"><sup>{{forloop.counter}}</sup>{{worker.get_worker_transaction_accreditation.transaction.get_license.date_expired}} </label>
+                    {% endfor %}
+                </td>
+                <td class="text-wrap text-uppercase" style="width:4rem;">
+                    {% for worker in row.get_workers %}
+                    <label class="text-{{worker.get_worker_transaction_accreditation.transaction.get_color}}"><sup>{{forloop.counter}}</sup>{{worker.get_worker_transaction_accreditation.transaction.get_license.level.name}} </label>
+                    {% endfor %}
+                </td>
+                <td>{% get_address row.barangay.id %}</td>
+                <td>{% get_details_attribute row.id 1 as email %} {{email.values}}</td>
+                <td>{% get_details_attribute row.id 2 as landline %} {{landline.values}}</td>
+                <td>{% get_details_attribute row.id 3 as fax %} {{fax.values}}</td>
+                <td>{% get_details_attribute row.id 4 as cellphone %} {{cellphone.values}}</td>
+                <td>{{row.name}}</td>
+                <td>{% get_address row.barangay.id %}</td>
+                <td>{% get_details_attribute row.id 1 as email %} {{email.values}}</td>
+                <td>{% get_details_attribute row.id 2 as landline %} {{landline.values}}</td>
+                <td>{% get_details_attribute row.id 3 as fax %} {{fax.values}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script>
+
+</script>

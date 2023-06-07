@@ -1,0 +1,147 @@
+{% load static %}
+<head>
+	<link href="{% static 'assets/css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+	<style>
+    @page {
+        size: a4 landscape;
+        @frame header_frame {           /* Static Frame */
+            -pdf-frame-content: header_content;
+            left: 30pt; width: 790pt; top: 18pt; height: 400pt;
+        }
+        @frame content_frame {          /* Content Frame */
+            left: 30pt; width: 790pt; top: 100pt; height: 400pt;
+        }
+        @frame footer_frame {           /* Another static Frame */
+            -pdf-frame-content: footer_content;
+            left: 30pt; width: 300pt; top: 560pt; height: 300pt;
+        }
+    }
+    .table-1{
+    	table-layout: fixed;
+		border: 1px solid black;
+		padding:3px;
+		text-align: center;
+		border-collapse: collapse;
+    }
+    .table-2{
+    	padding:1px;
+    	border:1px solid black;
+    	margin-bottom:10px;
+		border-collapse: collapse;
+    }
+    tr {
+    	text-align:left;
+    }
+
+
+
+</style>
+</head>
+
+<body>
+<!-- Content for Static Frame 'header_frame' -->
+<div id="header_content">
+	<h5>SB Form - 004-A</h5>
+	<h1 style="text-align:center;font-size:18px;">Report of Assessed/Accredited Child Development Centers</h1>
+	<p style="text-align:center;"><strong>As of 2nd Quarter 2021</strong></p>
+
+</div>
+
+<!-- HTML Content -->
+<div class="table-1">
+	<table>
+		<tr style="background-color:#f39477;">
+			<th rowspan="2">NO</th>
+			<th rowspan="2">NAME <br>OF CDC</th>
+			<th rowspan="2">ACCREDITATION LEVEL</th>
+			<th colspan="2">INCLUSIVE DATES</th>
+			<th rowspan="2">NAME <br>OF CDW</th>
+			<th rowspan="2">ACCREDITATION LEVEL</th>
+			<th rowspan="2">ADDRESS</th>
+			<th rowspan="2">NEW / RENEWAL</th>
+			<th colspan="2">INCLUSIVE DATES</th>
+			<th rowspan="2">Evaluator</th>
+		</tr>
+		<tr style="background-color:#f39477;">
+			<th>Date Issued</th>
+			<th>Date Expiry</th>
+			<th>INCLUSIVE DATES</th>
+			<th>INCLUSIVE DATES</th>
+		</tr>
+		{% for i in data %}
+			{% for item in i %}
+			<tr>
+				<td style="width:50px;">{{item.id}}</td>
+				<td style="width:100px;">{{item.worker.details.org.name}}</td>
+				<td style="width:100px;">Level 1</td>
+				<td >sample</td>
+				<td >sample</td>
+				<td >{{item.worker.first_name}} {% if item.worker.middle_name %} {{item.worker.middle_name}}. {% else %} {% endif %}{{item.worker.last_name}}</td>
+				<td style="width:100px;">Level 1</td>
+				<td style="width:150px;">{{item.worker.details.pds_barangay.name}}, {{item.worker.details.pds_barangay.city_code.prov_code.name}}</td>
+				<td style="width:70px;">Renewal/</td>
+				<td >sample</td>
+				<td >sample</td>
+				<td >Elizabeth Teodora S. Camello</td>
+			</tr>
+			{% endfor %}
+		{% endfor %}
+	</table>
+</div>
+<br>
+<br>
+<table>
+	<tr>
+		<td>
+			<p>Prepared by: </p>
+			<br>
+			<h3 style="margin-left:20px;">ARCHIE D. TURTUR, PDO III</h3>
+			<p style="margin-left:36px;">Standards Section Head</p>
+		</td>
+		<td style="text-align:left">
+			<p>Noted by: </p>
+			<br>
+			<h3 style="margin-left:20px;">ALDIE MAE A. ANDOY, SWO IV</h3>
+			<p style="margin-left:60px;">OIC, Chief of PPD</p>
+		</td>
+		<td style="text-align:left">
+			<p>Approved by: </p>
+			<br>
+			<h3 style="margin-left:25px;">RAMEL F. JAMEN</h3>
+			<p style="margin-left:20px;">OIC - Regional Director</p>
+		</td>
+	</tr>
+</table>
+<br>
+<br>
+<table class="table-2">
+		<tr>
+			<th colspan="3">SUMMARY REPORT</th>
+		</tr>
+		<tr>
+			<th>&nbsp;</th>
+			<th>ASSESSED</th>
+			<th>ACCREDITED</th>
+		</tr>
+		<tr style="text-align:center;">
+			<td style="width:200px;">CHILD DEVELOPMENT CENTERS</td>
+			<td>21</td>
+			<td>3</td>
+		</tr>
+		<tr style="text-align:center;">
+			<td style="width:200px;">CHILD DEVELOPMENT WORKERS</td>
+			<td>24</td>
+			<td>5</td>
+		</tr>
+	</table>
+
+
+<!-- Content for Static Frame 'footer_frame' -->
+<div id="footer_content" >
+	Page <pdf:pagenumber></pdf:pagenumber>
+	of <pdf:pagecount></pdf:pagecount>
+</div>
+<script src="{% static 'assets/libs/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'assets/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

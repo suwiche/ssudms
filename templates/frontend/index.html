@@ -1,0 +1,37 @@
+
+{% extends 'frontend/header.html' %}
+
+{% block body %}
+{% load tags %}
+<div class="container-fluid">
+    <div class="charts">
+
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    const d = new Date();
+    let year = d.getFullYear();
+
+    const callPage = pageRefInput => {
+        $.ajax({
+            url: pageRefInput,
+            type: "GET",
+            dataType: 'text',
+            beforeSend: function() {
+                $('.charts').empty();
+                $('.charts').append('<div class="loader-box"><div class="loader-8"></div></div><h6 class="sub-title mb-0 text-center">Loading...</h6>');
+            },
+            success: function(response) {
+                $('.charts').html(response);
+            },
+            complete: function() {
+                $('.preloader').css('display', 'none');
+            }
+        });
+    }
+
+    callPage(`/dashboard/update_charts/in/no-filter/${year}`);
+</script>
+{% endblock %}

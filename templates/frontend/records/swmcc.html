@@ -1,0 +1,66 @@
+{% load tags %}
+{% if acronym == 'swmcc' %}
+<script>
+   $('#swmcc_datatable').DataTable();
+   $('table.swmcc_datatable tbody').on('click', 'tr', function() {
+     const table = $('table.swmcc_datatable').DataTable();
+     let data = table.row(this).data()
+     $('#viewRecordModal').modal('show');
+     $('#viewRecordModalContent').empty();
+     $('#viewRecordModalContent').load(`/dashboard/view_record/swmcc/view/${data[0]}`);
+   });
+
+   $("#viewRecordModal").on("hide.bs.modal", function (e) {
+        $("#province").select2("destroy");
+        $("#citymun").select2("destroy");
+        $("#barangay").select2("destroy");
+    });
+</script>
+<div class="table-responsive">
+   <table class="table-bordered table-sm swmcc_datatable" style="width:100%" id="swmcc_datatable">
+      <thead>
+         <tr class="text-center">
+            <th>No.</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Sex</th>
+            <th>Civil Status</th>
+            <th>Educational Attainment</th>
+            <th>Present Position</th>
+            <th>Agency</th>
+            <th>Address</th>
+            <th>PRC NO.</th>
+            <th>Validity Period</th>
+            <th>Date Of Application</th>
+            <th>Inclusive Dates</th>
+            <th>Status</th>
+            <th>Accreditation Number</th>
+            <th>Remarks</th>
+         </tr>
+      </thead>
+      <tbody>
+         {% for row in data %}
+         <tr class="text-center">
+            <td>{{row.id}}</td>
+            <td class="text-uppercase">{{row.get_worker_fullname}}</td>
+            <td>{% get_worker_details_by_name 'Age' row.org_type_id row.id %}</td>
+            <td>{{row.get_sex}}</td>
+            <td>{% get_worker_details_by_name 'Civil Status' row.org_type_id row.id %}</td>
+            <td>{% get_worker_details_by_name 'Educational Attainment' row.org_type_id row.id %}</td>
+            <td>{% get_worker_details_by_name 'Present Position' row.org_type_id row.id %}</td>
+            <td>{% get_worker_details_by_name 'Agency' row.org_type_id row.id %}</td>
+            <td>{{row.address}}, {{row.province}}</td>
+            <td>{% get_worker_details_by_name 'PRC NO.' row.org_type_id row.id %}</td>
+            <td>{% get_worker_details_by_name 'Validity Period' row.org_type_id row.id %}</td>
+            <td>{% get_worker_details_by_name 'Date of application' row.org_type_id row.id %}</td>
+            <td class="bg-{{row.get_worker_transaction_accreditation.transaction.get_color}}">{% if row.get_worker_transaction_accreditation %} {{row.get_worker_transaction_accreditation.transaction.get_license.date_issued}} - {{row.get_worker_transaction_accreditation.transaction.get_license.date_expired}} {% endif %}</td>
+            <td class="bg-{{row.get_worker_transaction_accreditation.transaction.get_color}}">{% if row.get_worker_transaction_accreditation %} {{row.get_worker_transaction_accreditation.transaction.status.name}} {% endif %}</td>
+            <td class="bg-{{row.get_worker_transaction_accreditation.transaction.get_color}}">{% if row.get_worker_transaction_accreditation %} {{row.get_worker_transaction_accreditation.transaction.get_license.number}} {% endif %}</td>
+            <td>{% if row.get_worker_transaction_accreditation %} {{row.get_worker_transaction_accreditation.transaction.remarks}} {% endif %}</td>
+         </tr>
+         {% endfor %}
+      </tbody>
+   </table>
+</div>
+{% elif action == 'swhcc_view' %}
+{% endif %}
