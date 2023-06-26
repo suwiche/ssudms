@@ -69,10 +69,11 @@
                               <li class="nav-item"><a class="nav-link" href="{% url 'frontend-index-page' %}">Dashboard</a></li>
                               <li class="nav-item buy-btn"><a class="nav-link js-scroll" href="{% url 'landingpage-logout-page' %}">Logout</a></li>
                               {% else %}
-                              <li class="nav-item buy-btn"><a class="nav-link js-scroll" href="{% url 'oidc_authentication_init' %}">Login</a></li>
                               <!--
-                              <li class="nav-item buy-btn"><a class="nav-link js-scroll" href="{% url 'landingpage-login-page' %}">Login</a></li>
+                              <li class="nav-item buy-btn"><a class="nav-link js-scroll" href="{% url 'oidc_authentication_init' %}">Login</a></li>
                               -->
+                              <li class="nav-item buy-btn"><a class="nav-link js-scroll" href="{% url 'landingpage-login-page' %}">Login</a></li>
+
                               {% endif %}
                            </ul>
                         </div>
