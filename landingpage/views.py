@@ -46,6 +46,6 @@ def get_logout_url(request):
 def logout_page(request):
     django_logout_url = settings.LOGOUT_REDIRECT_URL or '/'
     
-    logout_url = get_logout_url(request)
+    logout_url = django_logout_url
     logout(request)
     return HttpResponseRedirect(logout_url)

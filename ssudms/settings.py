@@ -83,10 +83,10 @@ WSGI_APPLICATION = 'ssudms.wsgi.application'
 DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': '172.31.240.235',
+        'HOST': '127.0.0.1',
         'NAME': 'caraga-reliance',
-        'USER': 'caraga-reliance',
-        'PASSWORD': 'ZaqXsw12345^&*()1234%',
+        'USER': 'root',
+        'PASSWORD': '',
         'PORT': '3306'
     }
 }
