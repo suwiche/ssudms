@@ -126,6 +126,10 @@ def records(request, acronym=None, action=None):
                         data = Org.objects.filter(name__icontains=keyword, org_type=type).all() if type.id != 3 else \
                             Org.objects.filter(name__icontains=keyword, org_type=type).all().order_by(
                                 '-agency_type_id')
+                    elif keyword is None and province is None and city is None and barangay is None:
+                        data = Org.objects.filter(org_type=type).all() if type.id != 3 else \
+                            Org.objects.filter(name__icontains=keyword, org_type=type).all().order_by(
+                                '-agency_type_id')
                     elif keyword and province and city is None and barangay is None:
                         data = Org.objects.filter(name__icontains=keyword, org_type=type,
                                                   barangay__city_code__prov_code_id=province).all() if type.id != 3 else \
@@ -154,8 +158,8 @@ def records(request, acronym=None, action=None):
                         data = data = Org.objects.filter(org_type=type).all() if type.id != 3 else \
                             Org.objects.filter(org_type=type).all().order_by(
                                 '-agency_type_id')
-
-                    context['data'] = Paginator(data, 1).page(page_num)
+                
+                    context['data'] = Paginator(data, 5).page(page_num)
                     context['acronym'] = acronym
                     context['action'] = 'records_filter'
                     context['filters'] = '?keyword={}&province={}&city={}&barangay={}'.format(keyword, province, city,
@@ -861,7 +865,6 @@ def generate_report(request, type=None, filter=None):
                     'quarter': wquarters[id_quarter - 1],
                     'year': id_year
                 }
-                print(context)
                 return render(request, 'frontend/forms/{}.html'.format(form.name), context)
 
         context = {

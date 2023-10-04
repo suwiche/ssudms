@@ -43,7 +43,7 @@
 
 
 
-					{% if request.user.id == 1 or request.user.id == 2 or request.user.id == 3 or request.user.id == 4 or request.user.id == 6 or request.user.id == 8 or request.user.id == 17 %}
+					{% if request.user.id == 1 or request.user.id == 2 or request.user.id == 3 or request.user.id == 4 or request.user.id == 6 or request.user.id == 5 or request.user.id == 8 or request.user.id == 17 %}
 
 					<li class="sidebar-main-title">
 							<div>
@@ -70,7 +70,7 @@
 
 					{% endif %}
 
-					{% if request.user.id == 3 %}
+					{% if request.user.id == 3 or request.user.id == 5 %}
 					<li class="sidebar-list">
 						<label class="badge badge-success">2</label><a class="sidebar-link sidebar-title"><i data-feather="file-text"></i><span>Forms</span></a>
 						<ul class="sidebar-submenu">
