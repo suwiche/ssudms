@@ -109,7 +109,7 @@ def records(request, acronym=None, action=None):
                 page = request.GET.get('page', 1)
 
             print(page)
-            paginator = Paginator(data, 5)
+            paginator = Paginator(data, 10)
             context['data'] = paginator.page(page)
             context['acronym'] = acronym
             return render(request, 'frontend/records/records.html', context)
@@ -159,7 +159,7 @@ def records(request, acronym=None, action=None):
                             Org.objects.filter(org_type=type).all().order_by(
                                 '-agency_type_id')
                 
-                    context['data'] = Paginator(data, 5).page(page_num)
+                    context['data'] = Paginator(data, 10).page(page_num)
                     context['acronym'] = acronym
                     context['action'] = 'records_filter'
                     context['filters'] = '?keyword={}&province={}&city={}&barangay={}'.format(keyword, province, city,

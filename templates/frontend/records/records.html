@@ -49,7 +49,7 @@
                            </div>
                            <div class="row">
                               <div class="form-group text-end">
-                                 <button type="submit" class="btn btn-warning">Preview</button>
+                                 <button type="submit" class="btn btn-warning" {% if acronym == "swmcc" or acronym == "pmc" or acronym == "scc" %} disabled {% endif %}>Preview</button>
                               </div>
                            </div>
                         </div>

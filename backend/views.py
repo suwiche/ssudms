@@ -49,6 +49,7 @@ def users_page(request, action=None, pk=None):
                                                         is_superuser=1 if is_superuser is True else 0,
                                                         is_staff=1 if is_staff is True else 0)
                         user.save()
+                        print(group)
                         user.groups.add(group)
 
                         return JsonResponse({'statusMsg': 'Success!'}, status=200)

@@ -254,11 +254,10 @@ $(document).ready(() => {
                         });
                     },
                     error: (result) => {
-                        const statusMsg = result['responseJSON']['statusMsg'];
-                        const error = result['responseJSON']['error'];
+                        const statusMsg =result["responseJSON"]["erorrs"];
                         swal({
                             title: 'Error',
-                            text: error,
+                            text: statusMsg,
                             icon: "error",
                         });
                     }

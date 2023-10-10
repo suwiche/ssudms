@@ -10,15 +10,15 @@ from .models import LibraryExtensions, LibraryTypes, LibraryProcess, LibraryServ
 
 class SignUpForm(UserCreationForm):
     username = forms.CharField(min_length=4, max_length=20,
-                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter username'}))
+                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input username'}))
     email = forms.EmailField(required=False, label='Enter email',
-                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter email'}))
+                             widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Input email'}))
     first_name = forms.CharField(required=False, max_length=30, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter first name'}))
+        attrs={'class': 'form-control', 'placeholder': 'Input first name'}))
     last_name = forms.CharField(required=False, max_length=30, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter last name'}))
-    password1 = forms.CharField(min_length=6, label='Enter password', widget=forms.PasswordInput(
-        attrs={'class': 'form-control', 'placeholder': 'Enter password'}))
+        attrs={'class': 'form-control', 'placeholder': 'Input last name'}))
+    password1 = forms.CharField(min_length=6, label='Input password', widget=forms.PasswordInput(
+        attrs={'class': 'form-control', 'placeholder': 'Input password'}))
     password2 = forms.CharField(min_length=6, label='Confirm password', widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': 'Confirm password'}))
     is_active = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': 'checkbox_animated'}))
