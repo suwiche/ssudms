@@ -154,14 +154,24 @@
                         {% csrf_token %}
                         <div class="row">
                             <input type="hidden" name="type_id" value="{{type.id}}" />
-                            {% for row in details_attribute %}
-                            <div class="col-sm-{{row.width}} mb-2">
-                                <label class="col-form-label">{{row.name}}{% if row.is_required %} <i style="color: #dc3545;">*</i>{% endif %}</label>
-                                <div class="">
-                                    <input type="{{row.input_type}}" class="form-control additional-details" name="details-attribute-{{row.id}}" {% if row.is_required %} required {% endif %} />
-                                    {% if row.is_required %} <div class="invalid-feedback text-danger">Required</div> {% endif %}
+                            <!-- Custom AOO 
+                            {% if type.acronym == "swda" %}
+                                <label class="col-form-label">AOO<i style="color: #dc3545;">*</i></label>
+                                    <select class="form-control id_aoo_types additional-details" name="sex">
+                                        {% for row in provinces %}
+                                        <option value="{{row.id}}">{{row.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                            {% endif %}
+                            -->
+                            {% for row in details_attribute %}                                
+                                <div class="col-sm-{{row.width}} mb-2">
+                                    <label class="col-form-label">{{row.name}}{% if row.is_required %} <i style="color: #dc3545;">*</i>{% endif %}</label>
+                                    <div class="">
+                                        <input type="{{row.input_type}}" class="form-control additional-details" name="details-attribute-{{row.id}}" {% if row.is_required %} required {% endif %} />
+                                        {% if row.is_required %} <div class="invalid-feedback text-danger">Required</div> {% endif %}
+                                    </div>
                                 </div>
-                            </div>
                             {% endfor %}
                         </div>
                         <div class="d-flex justify-content-end mt-3">
@@ -565,6 +575,12 @@
             placeholder: "Select",
             width: "resolve",
             dropdownParent: $("#basicDetailsForm"),
+        });
+
+        $(".id_aoo_types").select2({
+            placeholder: "Select",
+            width: "resolve",
+            dropdownParent: $("#additionalDetailsForm"),
         });
     }
 
