@@ -101,33 +101,33 @@
                     </tr>
                     <tbody contenteditable="true">
                     {% for row in data %}
-                        <tr>
-                            <td>{{row.name}}</td>
-                            <td>{% if row.get_org_transaction_accreditation.transaction.get_license %} Level {{row.get_org_transaction_accreditation.transaction.get_license.level.name}} {%endif %}</td>
-                            <td>{% if row.get_org_transaction_accreditation.transaction.get_license %} {{row.get_org_transaction_accreditation.transaction.get_license.date_issued}} - {{row.get_org_transaction_accreditation.transaction.get_license.date_expired}} {%endif %}</td>
-                            <td>
-                                {% for worker in row.get_workers %}
-                                <label><sup>{{forloop.counter}}</sup>{{worker.get_worker_fullname}} </label>
-                                {% endfor %}
-                            </td>
-                            <td>
-                                {% for worker in row.get_workers %}
-                                <label>{% if worker.get_worker_transaction_accreditation.transaction.get_license %}<sup>{{forloop.counter}}</sup>Level {{worker.get_worker_transaction_accreditation.transaction.get_license.level.name}} {%endif %}</label>
-                                {% endfor %}
-                            </td>
-                            <td>{{row.get_address}}</td>
-                            <td>
-                                {% for worker in row.get_workers %}
-                                <label>{% if worker.get_worker_transaction_accreditation and row.get_check_if_renewal_a == 0 %} <sup>{{forloop.counter}}</sup> ✓ {% endif %}</label>
-                                {% endfor %}
-                            </td>
-                            <td>
-                                {% for worker in row.get_workers %}
-                                <label>{% if worker.get_worker_transaction_accreditation.transaction.get_license %} <sup>{{forloop.counter}}</sup> {{worker.get_worker_transaction_accreditation.transaction.get_license.date_issued}} - {{worker.get_worker_transaction_accreditation.transaction.get_license.date_expired}} {%endif %}</label>
-                                {% endfor %}
-                            </td>
-                            <td>{{row.get_org_transaction_accreditation.transaction.assessed_by}}</td>
-                        </tr>
+                            <tr>
+                                <td>{{row.name}}</td>
+                                <td>{% if row.get_org_transaction_accreditation.transaction.get_license %} Level {{row.get_org_transaction_accreditation.transaction.get_license.level.name}} {%endif %}</td>
+                                <td>{% if row.get_org_transaction_accreditation.transaction.get_license %} {{row.get_org_transaction_accreditation.transaction.get_license.date_issued}} - {{row.get_org_transaction_accreditation.transaction.get_license.date_expired}} {%endif %}</td>
+                                <td>
+                                    {% for worker in row.get_workers %}
+                                    <label><sup>{{forloop.counter}}</sup>{{worker.get_worker_fullname}} </label>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% for worker in row.get_workers %}
+                                    <label>{% if worker.get_worker_transaction_accreditation.transaction.get_license %}<sup>{{forloop.counter}}</sup>Level {{worker.get_worker_transaction_accreditation.transaction.get_license.level.name}} {%endif %}</label>
+                                    {% endfor %}
+                                </td>
+                                <td>{{row.get_address}}</td>
+                                <td>
+                                    {% for worker in row.get_workers %}
+                                    <label>{% if worker.get_worker_transaction_accreditation and row.get_check_if_renewal_a == 0 %} <sup>{{forloop.counter}}</sup> ✓ {% endif %}</label>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {% for worker in row.get_workers %}
+                                    <label>{% if worker.get_worker_transaction_accreditation.transaction.get_license %} <sup>{{forloop.counter}}</sup> {{worker.get_worker_transaction_accreditation.transaction.get_license.date_issued}} - {{worker.get_worker_transaction_accreditation.transaction.get_license.date_expired}} {%endif %}</label>
+                                    {% endfor %}
+                                </td>
+                                <td>{{row.get_org_transaction_accreditation.transaction.assessed_by}}</td>                            
+                            </tr>                      
                     {% endfor %}
                     </tbody>
                 </table>
@@ -148,8 +148,8 @@
                     <div style="float: left; width: 33%;">
                     <p>Approved By:</p>
                     <br>
-                    <label contenteditable="true"><b>RAMEL F. JAMEN</b></label>
-                    <p contenteditable="true">OIC- REGIONAL DIRECTOR</p>
+                    <label contenteditable="true"><b>MARI-FLOR A. DOLLAGA - LIBANG</b></label>
+                    <p contenteditable="true">REGIONAL DIRECTOR</p>
                     </div>
                   </div>
             </div>

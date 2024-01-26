@@ -39,8 +39,9 @@
 
 					<li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav" href="{% url 'frontend-records' %}"><i data-feather="book-open"> </i><span>Records</span></a></li>
 					<li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav" href="{% url 'frontend-generate-report' %}"><i data-feather="file-text"></i><span>Generate Report</span></a></li>
-					<li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav" href="{% url 'frontend-summary-report' %}"><i data-feather="file-text"></i><span>Summary Report</span></a></li>
-
+					<!--
+						<li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav" href="{% url 'frontend-summary-report' %}"><i data-feather="file-text"></i><span>Summary Report</span></a></li>
+					-->
 
 
 					{% if request.user.id == 1 or request.user.id == 2 or request.user.id == 3 or request.user.id == 4 or request.user.id == 6 or request.user.id == 5 or request.user.id == 8 or request.user.id == 17 %}

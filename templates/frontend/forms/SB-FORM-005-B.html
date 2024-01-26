@@ -1,3 +1,4 @@
+{% load tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -102,17 +103,19 @@
                         <td>Unmet Standards</td>
                     </tr>
                     <tbody contenteditable="true">
+                        {% for row in data %}
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{row.get_worker_fullname}}</td>
+                            <td>{{row.address}}</td>
+                            <td>{% get_worker_details_by_name 'Present Position' row.org_type_id row.id %}</td>
+                            <td>{{row.get_worker_transaction_accreditation.transaction.date_assessed}}</td>
+                            <td>{{row.get_worker_transaction_accreditation.transaction.date_complete_docs}}</td>
+                            <td>{{row.get_worker_transaction_accreditation.transaction.get_license.number}}</td>
+                            <td>{{row.get_worker_transaction_accreditation.transaction.get_license.status}}</td>
+                            <td>{% if not row.get_worker_transaction_accreditation.transaction.get_license %} ✓ {% endif %}</td>
                             <td></td>
                         </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
                 <br>
@@ -132,8 +135,8 @@
                     <div style="float: left; width: 33%;">
                     <p>Approved By:</p>
                     <br>
-                    <label contenteditable="true"><b>RAMEL F. JAMEN</b></label>
-                    <p contenteditable="true">OIC- REGIONAL DIRECTOR</p>
+                    <label contenteditable="true"><b>Mari-Flor A. Dollaga - Libang</b></label>
+                    <p contenteditable="true">REGIONAL DIRECTOR</p>
                     </div>
                   </div>
             </div>

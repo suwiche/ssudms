@@ -792,6 +792,7 @@ def generate_report(request, type=None, filter=None):
             id_quarter = int(request.POST.get('quarter'))
             id_year = int(request.POST.get('year'))
             action = request.POST.get('action')
+            cworker = None
             data = None
             form = Forms.objects.filter(id=form_id).first()
             if action == "load" and form:
@@ -830,8 +831,7 @@ def generate_report(request, type=None, filter=None):
                                                   quarters['{}'.format(id_quarter)][0],
                                                   quarters['{}'.format(id_quarter)][1])).exclude(
                         orgtransaction__transaction__assessed_by=None,
-                        orgtransaction__transaction__date_assessed=None).all()
-
+                        orgtransaction__transaction__date_assessed=None).all()                 
                 elif form.name == "SB-FORM-005-A":
                     data = Worker.objects.filter(Q(workertransaction__transaction__status_id=3) |
                                                  Q(workertransaction__transaction__status_id=4) |
